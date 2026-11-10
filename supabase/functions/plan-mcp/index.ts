@@ -387,4 +387,13 @@ const store = {
   async logChange(uid, c) { must(await db.from("plan_changes").insert({ user_id: uid, ...c })); },
 };
 
-Deno.serve((req) => handleHttp(req, store));
+// One log line per request (never the secret link) to help diagnose connection problems.
+Deno.serve(async (req) => {
+  let body = "";
+  try { body = await req.clone().text(); } catch { /* no body */ }
+  let rpc = null;
+  try { const j = JSON.parse(body); rpc = (Array.isArray(j) ? j : [j]).map(x => [x.method, x.params?.protocolVersion, x.params?.clientInfo?.name].filter(Boolean).join(" ")); } catch { /* not JSON */ }
+  const res = await handleHttp(req, store);
+  console.log(JSON.stringify({ http: req.method, status: res.status, rpc, accept: req.headers.get("accept"), protocol: req.headers.get("mcp-protocol-version"), session: req.headers.get("mcp-session-id"), auth: req.headers.has("authorization"), ua: req.headers.get("user-agent") }));
+  return res;
+});
