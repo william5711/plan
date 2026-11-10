@@ -38,7 +38,7 @@ supabase functions deploy plan-mcp --no-verify-jwt --project-ref yjzlpgiklxrnimq
 
 ### 5. Connect the Claude app
 1. In Plan, open the **Claude** tab → **Create connector link** → **Copy link**. The link is shown only once.
-2. On claude.ai (on a computer), go to **Settings → Connectors → Add custom connector**. Name it `Plan`, paste the link, and add it.
+2. On claude.ai (on a computer), go to **Settings → Connectors → Add custom connector**. Name it `Plan`, paste the link, and under **Authentication** choose **No sign-in** (the link itself is the key). Choosing a sign-in option gives a "Couldn't register with plan's sign-in service" error.
 3. In any chat, on claude.ai or in the Claude phone app, make sure Plan is turned on in the chat's tools menu. Then just talk:
    - "I have a STATS midterm Thursday at 9am. Plan study sessions this week around my classes."
    - "I'm wiped, move everything flexible after 8pm to tomorrow."
