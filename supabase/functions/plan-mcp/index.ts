@@ -366,7 +366,12 @@ async function handleHttp(req, store) {
 
 // Supabase-backed store. The service-role key bypasses row rules, so every query is scoped to the link's user.
 const COLS = "id,title,notes,day,start_time,duration_min,kind,priority,due,done,done_at,source,created_at,updated_at";
-const db = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"), { auth: { persistSession: false } });
+// Prefer the project's new secret key (SUPABASE_SECRET_KEYS); fall back to the legacy service-role key.
+function serverKey() {
+  try { const keys = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}"); const k = keys.default || Object.values(keys)[0]; if (k) return k; } catch { /* use the legacy key */ }
+  return Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+}
+const db = createClient(Deno.env.get("SUPABASE_URL"), serverKey(), { auth: { persistSession: false } });
 const must = (r) => { if (r.error) throw r.error; return r.data; };
 const store = {
   async userForTokenHash(hash) { return must(await db.from("plan_connector").select("user_id").eq("token_hash", hash).maybeSingle())?.user_id || null; },
