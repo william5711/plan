@@ -8,248 +8,281 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Plan">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#F3F3F1" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EEF1F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Manrope:wght@400..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <style>
-/* Same look as Pocket: cool grey page, a midnight hero card, white grouped cards, a floating tab bar. */
+/* Bento: the day as a set of rounded tiles. The top of Today answers three questions at a glance:
+   what's on now (dark tile), what's next (lime tile), and what's later (white tiles). */
+/* Colour jobs: navy + white are the base; red = now (countdown, Done, +); blue = next;
+   blue-green (teal) = progress and free time (done, meters, fixed blocks). */
 :root {
-  --hero-a: #171C27; --hero-b: #222937; --on-hero: #F4F6FA; --on-hero-2: rgba(226,231,240,.62);
-  --glass-line: rgba(255,255,255,.10);
-  --sheet: #F3F3F1; --card: #FFFFFF; --ink: #171B22; --ink-2: #6B7079; --line: #E8E7E3; --fill: #F4F4F1;
-  --accent: #2F4B85; --accent-ink: #FFFFFF;
-  --ok: #3E7D55; --warn: #9A6B1F; --bad: #B4553A;
-  --blk: #E9EEF8; --blk-ink: #1E3566; --fix: #EFEAE2; --fix-ink: #5E4A27;
-  --shadow: 0 1px 2px rgba(23,27,34,.05);
-  --ring: 0 0 0 1px rgba(23,27,34,.06);
-  --font: "Manrope", ui-sans-serif, -apple-system, "SF Pro Text", system-ui, sans-serif;
-  --display: "Bricolage Grotesque", "Manrope", ui-sans-serif, -apple-system, system-ui, sans-serif;
+  --page: #EEF1F8; --tile: #FFFFFF; --tile-2: #F2F5FA; --line: #E2E7F1;
+  --ink: #14213D; --ink-2: #5A6683; --ink-3: #8A94AD;
+  --hero: #14213D; --on-hero: #F2F5FB; --on-hero-2: #A9B6D3; --hero-line: #2A3758;
+  --red: #E5432D; --on-red: #FFFFFF; --red-hi: #FF7A66; --red-soft: #FFE3DE; --on-red-soft: #8A1F12;
+  --blue: #2F6BFF; --on-blue: #FFFFFF; --blue-hi: #8DB4FF; --blue-soft: #E3ECFF; --on-blue-soft: #1C3D94;
+  --teal: #0891B2; --on-teal: #FFFFFF; --teal-soft: #D2F1FA; --on-teal-soft: #075A70;
+  --focus: #2F6BFF;
+  --font: "Plus Jakarta Sans", ui-sans-serif, -apple-system, system-ui, sans-serif;
+  --r-tile: 22px; --r-ctl: 14px;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --hero-a: #1A1F29; --hero-b: #232A36;
-  --sheet: #08090B; --card: #1A1D24; --ink: #ECEDEF; --ink-2: #959AA4; --line: #2F343E; --fill: #252932;
-  --accent: #A9BCE6; --accent-ink: #12161E; --ok: #7FC497; --warn: #D7B064; --bad: #E39A80;
-  --blk: #243250; --blk-ink: #D5E0F7; --fix: #3A3226; --fix-ink: #EBD9B8;
-  --shadow: none; --ring: 0 0 0 1px rgba(255,255,255,.08); color-scheme: dark;
+  --page: #0B1020; --tile: #161D30; --tile-2: #1E2740; --line: #263049;
+  --ink: #EEF2FB; --ink-2: #A3AECB; --ink-3: #74809E;
+  --hero: #22305A; --on-hero: #F2F5FB; --on-hero-2: #B4C0DE; --hero-line: #34446F;
+  --red-soft: #4A1F1A; --on-red-soft: #FFD9D2; --blue: #3D78FF; --blue-soft: #1E3366; --on-blue-soft: #DCE6FF;
+  --teal: #22B8DC; --on-teal: #03222C; --teal-soft: #0E4152; --on-teal-soft: #C9F1FC;
+  --focus: #8DB4FF; color-scheme: dark;
 } }
 :root[data-theme="dark"] {
-  --hero-a: #1A1F29; --hero-b: #232A36;
-  --sheet: #08090B; --card: #1A1D24; --ink: #ECEDEF; --ink-2: #959AA4; --line: #2F343E; --fill: #252932;
-  --accent: #A9BCE6; --accent-ink: #12161E; --ok: #7FC497; --warn: #D7B064; --bad: #E39A80;
-  --blk: #243250; --blk-ink: #D5E0F7; --fix: #3A3226; --fix-ink: #EBD9B8;
-  --shadow: none; --ring: 0 0 0 1px rgba(255,255,255,.08); color-scheme: dark;
+  --page: #0B1020; --tile: #161D30; --tile-2: #1E2740; --line: #263049;
+  --ink: #EEF2FB; --ink-2: #A3AECB; --ink-3: #74809E;
+  --hero: #22305A; --on-hero: #F2F5FB; --on-hero-2: #B4C0DE; --hero-line: #34446F;
+  --red-soft: #4A1F1A; --on-red-soft: #FFD9D2; --blue: #3D78FF; --blue-soft: #1E3366; --on-blue-soft: #DCE6FF;
+  --teal: #22B8DC; --on-teal: #03222C; --teal-soft: #0E4152; --on-teal-soft: #C9F1FC;
+  --focus: #8DB4FF; color-scheme: dark;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; }
-body { background: var(--sheet); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.45;
-  font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--sheet); }
+html, body { margin: 0; overflow-x: clip; }
+body { background: var(--page); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.45; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--page); }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 [hidden] { display: none !important; }
 .wrap { max-width: 560px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 
-/* Top bar */
-.top .wrap { padding-top: calc(10px + env(safe-area-inset-top, 0px)); display: grid; gap: 12px; }
-.topbar { display: flex; align-items: center; gap: 6px; min-width: 0; min-height: 44px; }
-.ptitle { margin: 0; font-family: var(--display); font-size: 26px; font-weight: 700; letter-spacing: -.03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.navbtn { width: 36px; height: 36px; border-radius: 50%; border: 0; background: none; display: grid; place-items: center; color: var(--ink-2); flex: none; }
-.navbtn:active { background: var(--card); color: var(--ink); box-shadow: var(--ring); }
-.tright { display: flex; align-items: center; gap: 6px; margin-left: auto; flex: none; }
-.pill { font-size: 11.5px; font-weight: 700; padding: 4px 9px; border-radius: 999px; background: var(--card); color: var(--ink-2); box-shadow: var(--ring); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; border: 0; }
-.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
-.pill[data-state="off"]::before { background: var(--warn); }
-.pill.plain::before { display: none; }
+/* Header */
+.top .wrap { padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
+.topbar { display: flex; align-items: center; gap: 4px; min-height: 48px; }
+.ttl { flex: 1 1 auto; min-width: 0; }
+.ttl h1 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ttl p { margin: 0; font-size: 13px; color: var(--ink-2); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tright { display: flex; align-items: center; gap: 4px; margin-left: auto; flex: none; }
+.navbtn { width: 38px; height: 38px; border-radius: 12px; border: 0; background: var(--tile); display: grid; place-items: center; color: var(--ink); }
+.navbtn:active { background: var(--tile-2); }
+.chipbtn { border: 0; background: var(--ink); color: var(--page); border-radius: 12px; height: 38px; padding: 0 12px; font-weight: 700; font-size: 13px; }
+.sync { font-size: 12px; font-weight: 600; color: var(--ink-3); padding: 0 6px; }
 
-/* Hero */
-.hero { position: relative; overflow: hidden; border-radius: 20px; padding: 18px 18px 14px; color: var(--on-hero);
-  background: linear-gradient(165deg, var(--hero-b), var(--hero-a)); box-shadow: 0 1px 2px rgba(0,0,0,.08); display: grid; gap: 14px; }
-.eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--on-hero-2); }
-.now-title { font-family: var(--display); font-size: clamp(24px, 7vw, 30px); font-weight: 700; letter-spacing: -.03em; line-height: 1.12; margin-top: 4px; overflow-wrap: anywhere; }
-.now-sub { font-size: 13.5px; color: var(--on-hero-2); margin-top: 4px; }
-.now-sub strong { color: var(--on-hero); font-weight: 700; }
-.nowbar { height: 4px; background: rgba(255,255,255,.12); margin-top: 10px; overflow: hidden; }
-.nowbar i { display: block; height: 100%; background: #E6EAF1; }
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--glass-line); padding-top: 12px; }
-.stat { min-width: 0; padding: 0 6px; text-align: center; }
-.stat + .stat { border-left: 1px solid var(--glass-line); }
-.stat span { display: block; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--on-hero-2); }
-.stat strong { font-size: 16px; font-weight: 800; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+/* Page and tiles */
+.sheet .wrap { padding-block: 14px calc(112px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.tile { background: var(--tile); border-radius: var(--r-tile); padding: 14px 16px; min-width: 0; display: grid; gap: 4px; align-content: start; }
+.tile.wide { grid-column: 1 / -1; }
+.tile.flush { padding: 6px 0; }
+.tile h2 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.tile .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 8px 16px 4px; }
+.tile .hd .link { padding: 0; }
+.lbl { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.big { font-size: 26px; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; overflow-wrap: anywhere; min-width: 0; }
+.mid { font-size: 18px; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; overflow-wrap: anywhere; min-width: 0; }
+.small { font-size: 13px; color: var(--ink-2); }
+.tap { border: 0; text-align: left; font: inherit; color: inherit; cursor: pointer; width: 100%; }
 
-/* Page */
-.sheet .wrap { padding-block: 18px calc(118px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 22px; grid-template-columns: minmax(0, 1fr); }
-.sec { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
-.sec-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 0 4px; }
-.sec-h h2 { margin: 0; font-family: var(--display); font-size: 19px; font-weight: 700; letter-spacing: -.02em; }
-.sec-h .meta { font-size: 12.5px; color: var(--ink-2); font-weight: 700; white-space: nowrap; }
-.link { background: none; border: 0; color: var(--accent); font-weight: 700; font-size: 14px; padding: 6px 0; }
-.link.quiet { color: var(--ink-2); }
-.card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow), var(--ring); }
-.list { display: grid; overflow: hidden; }
-.list > * + * { box-shadow: inset 0 1px 0 var(--line); }
-.notice { font-size: 13.5px; color: var(--ink-2); background: var(--card); border-radius: 12px; padding: 12px 14px; box-shadow: var(--ring); }
-.notice strong { color: var(--ink); }
-.empty { padding: 18px; color: var(--ink-2); font-size: 14px; display: grid; gap: 10px; justify-items: start; }
-.empty p { margin: 0; max-width: 46ch; }
+.now { background: var(--tile); color: var(--ink); padding: 16px 18px 18px; gap: 6px; box-shadow: 0 12px 28px -18px rgba(20, 33, 61, .45); }
+.now .lbl { color: var(--red); font-weight: 700; }
+.now .small { color: var(--ink-2); }
+.now .title { font-size: 26px; font-weight: 800; letter-spacing: -.03em; line-height: 1.12; overflow-wrap: anywhere; }
+.now .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin-top: 6px; }
+.now .count { font-size: 40px; font-weight: 800; letter-spacing: -.04em; line-height: 1; color: var(--red); white-space: nowrap; }
+.now .count small { font-size: 15px; font-weight: 600; color: var(--ink-2); letter-spacing: 0; margin-left: 4px; }
+.bar { height: 6px; border-radius: 3px; background: var(--tile-2); overflow: hidden; margin-top: 10px; }
+.bar i { display: block; height: 100%; background: var(--red); border-radius: 3px; }
+.donebtn { border: 0; border-radius: 12px; height: 40px; padding: 0 14px; font-weight: 700; font-size: 14px; background: var(--red); color: var(--on-red); flex: none; }
 
-/* Task rows */
-.row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 0 10px; align-items: center; padding: 10px 14px 10px 10px; min-height: 58px; }
+.next { background: var(--blue); color: var(--on-blue); }
+.next .lbl, .next .small { color: color-mix(in srgb, var(--on-blue) 80%, transparent); }
+.free { background: var(--teal); color: var(--on-teal); }
+.free .lbl, .free .small { color: color-mix(in srgb, var(--on-teal) 80%, transparent); }
+.due { background: var(--red-soft); color: var(--on-red-soft); }
+.due .lbl, .due .small { color: color-mix(in srgb, var(--on-red-soft) 78%, transparent); }
+.stat { font-size: 28px; font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
+.stat small { font-size: 14px; font-weight: 600; color: var(--ink-2); letter-spacing: 0; }
+.meter { height: 6px; border-radius: 3px; background: var(--tile-2); overflow: hidden; margin-top: 6px; }
+.meter i { display: block; height: 100%; background: var(--teal); border-radius: 3px; }
+
+/* Rows inside tiles */
+.rows { display: grid; }
+.rows > * + * { border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 0 10px; align-items: center; padding: 9px 16px 9px 10px; min-height: 54px; }
 .row .main { border: 0; background: none; text-align: left; padding: 0; min-width: 0; display: grid; gap: 1px; }
-.row .name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .row .sub { font-size: 12.5px; color: var(--ink-2); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-.row.done .name { text-decoration: line-through; color: var(--ink-2); }
-.row .when { font-size: 13px; font-weight: 800; color: var(--ink-2); text-align: right; white-space: nowrap; }
-.check { width: 34px; height: 34px; border: 0; background: none; display: grid; place-items: center; padding: 0; color: var(--ink-2); }
-.check i { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 2px currentColor; display: grid; place-items: center; }
-.check[aria-pressed="true"] { color: var(--ok); }
-.check[aria-pressed="true"] i { background: var(--ok); box-shadow: none; color: var(--card); }
+.row.done .name { text-decoration: line-through; color: var(--ink-3); }
+.row .when { font-size: 14px; font-weight: 700; text-align: right; white-space: nowrap; }
+.check { width: 34px; height: 34px; border: 0; background: none; display: grid; place-items: center; padding: 0; color: var(--ink-3); }
+.check i { width: 22px; height: 22px; border-radius: 8px; box-shadow: inset 0 0 0 2px currentColor; display: grid; place-items: center; }
+.check[aria-pressed="true"] { color: var(--teal); }
+.check[aria-pressed="true"] i { background: var(--teal); box-shadow: none; color: var(--tile); }
 .check svg { width: 14px; height: 14px; }
-.tag { font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 1px 6px; border-radius: 6px; background: var(--fill); color: var(--ink-2); }
-.tag.hi { color: var(--bad); background: color-mix(in srgb, var(--bad) 12%, transparent); }
-.tag.ai { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
-.mini { min-height: 34px; padding: 0 12px; border-radius: 8px; border: 0; background: var(--accent); color: var(--accent-ink); font-weight: 800; font-size: 13px; white-space: nowrap; }
-.mini.ghost { background: var(--fill); color: var(--ink); }
+.tag { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 6px; background: var(--tile-2); color: var(--ink-2); }
+.tag.hi { color: var(--on-red-soft); background: var(--red-soft); }
+.tag.ai { color: var(--on-blue-soft); background: var(--blue-soft); }
+.mini { min-height: 34px; padding: 0 12px; border-radius: 10px; border: 0; background: var(--ink); color: var(--page); font-weight: 700; font-size: 13px; white-space: nowrap; }
+.mini.ghost { background: var(--tile-2); color: var(--ink); }
+.empty { padding: 4px 16px 14px; color: var(--ink-2); font-size: 14px; margin: 0; }
+.link { background: none; border: 0; color: var(--focus); font-weight: 700; font-size: 14px; padding: 6px 0; }
+.link.quiet { color: var(--ink-2); }
+.notice { font-size: 14px; color: var(--ink-2); }
 
 /* Timeline */
-.tl { position: relative; padding: 8px 10px 8px 0; }
-.tl-grid { position: relative; margin-left: 52px; cursor: copy; }
-.tl-hour { position: absolute; left: -52px; right: 0; height: 0; border-top: 1px solid var(--line); }
-.tl-hour span { position: absolute; left: 0; width: 44px; top: -8px; text-align: right; font-size: 11px; font-weight: 700; color: var(--ink-2); background: var(--card); padding-right: 4px; }
-.blk { position: absolute; border: 0; text-align: left; border-radius: 8px; padding: 4px 8px; overflow: hidden; background: var(--blk); color: var(--blk-ink);
-  display: flex; gap: 6px; align-items: flex-start; box-shadow: inset 3px 0 0 color-mix(in srgb, var(--blk-ink) 55%, transparent); cursor: pointer; min-width: 0; }
-.blk.fixed { background: var(--fix); color: var(--fix-ink); box-shadow: inset 3px 0 0 color-mix(in srgb, var(--fix-ink) 60%, transparent); }
-.blk.done { opacity: .5; }
+.tl { position: relative; padding: 8px 12px 10px 0; }
+.tl-grid { position: relative; margin-left: 50px; cursor: copy; }
+.tl-hour { position: absolute; left: -50px; right: 0; height: 0; border-top: 1px solid var(--line); }
+.tl-hour span { position: absolute; left: 0; width: 42px; top: -8px; text-align: right; font-size: 11px; font-weight: 600; color: var(--ink-3); background: var(--tile); padding-right: 4px; }
+.blk { position: absolute; border: 0; text-align: left; border-radius: 10px; padding: 5px 8px; overflow: hidden; background: var(--blue-soft); color: var(--on-blue-soft); display: flex; gap: 6px; align-items: flex-start; cursor: pointer; min-width: 0; }
+.blk.fixed { background: var(--teal-soft); color: var(--on-teal-soft); }
+.blk.cur { background: var(--hero); color: var(--on-hero); }
+.blk.done { opacity: .45; }
 .blk.done .bt { text-decoration: line-through; }
-.blk .bt { display: block; font-weight: 800; font-size: 13px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.blk .bt { display: block; font-weight: 700; font-size: 13px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .blk .bs { display: block; font-size: 11.5px; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.blk.short .bt { flex: 0 1 auto; min-width: 0; }
-.blk.short .bs { flex: 1 0 auto; }
 .blk .txt { min-width: 0; flex: 1; }
 .blk.short { align-items: center; padding-block: 0; }
 .blk.short .txt { display: flex; gap: 6px; align-items: baseline; }
-.blk .ic { flex: none; opacity: .7; margin-top: 2px; }
-.nowline { position: absolute; left: -6px; right: 0; height: 0; border-top: 2px solid var(--bad); z-index: 3; pointer-events: none; }
-.nowline::before { content: ""; position: absolute; left: -4px; top: -6px; width: 10px; height: 10px; border-radius: 50%; background: var(--bad); }
-.tl-hint { font-size: 12px; color: var(--ink-2); padding: 0 4px; }
+.blk.short .bt { flex: 0 1 auto; min-width: 0; }
+.blk.short .bs { flex: 1 0 auto; }
+.blk .ic { flex: none; opacity: .75; margin-top: 2px; }
+.nowline { position: absolute; left: -6px; right: 0; height: 0; border-top: 2px solid var(--red); z-index: 3; pointer-events: none; }
+.nowline::before { content: ""; position: absolute; left: -4px; top: -6px; width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
 
-/* Upcoming */
-.dayhead { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 14px 10px; }
-.dayhead strong { font-family: var(--display); font-size: 17px; letter-spacing: -.01em; }
-.dayhead .sub { font-size: 12.5px; color: var(--ink-2); font-weight: 700; display: flex; gap: 8px; align-items: center; }
-.loadbar { height: 3px; background: var(--fill); margin: 0 14px 4px; }
-.loadbar i { display: block; height: 100%; background: var(--accent); }
-.loadbar.busy i { background: var(--warn); }
-.chip { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
-.chip.warn { color: var(--warn); background: color-mix(in srgb, var(--warn) 14%, transparent); }
-.chip.ok { color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, transparent); }
-.addday { border: 0; background: none; color: var(--accent); font-weight: 700; font-size: 13.5px; padding: 12px 14px; text-align: left; width: 100%; }
+/* Month calendar */
+.cal { padding: 12px 8px 12px; gap: 6px; }
+.cal-h { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); text-align: center; font-size: 11px; font-weight: 700; color: var(--ink-3); }
+.cal-g { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+.cell { border: 0; background: none; min-height: 78px; border-radius: 12px; padding: 4px 2px 5px; display: flex; flex-direction: column; gap: 2px; align-items: stretch; min-width: 0; text-align: left; }
+.cell .dn { font-size: 13px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; align-self: center; flex: none; }
+.cell.out { opacity: .38; }
+.cell.today .dn { background: var(--red); color: var(--on-red); }
+.cell.sel { box-shadow: inset 0 0 0 2px var(--blue); background: var(--tile-2); }
+.cell .ev { font-size: 9.5px; font-weight: 700; line-height: 1.3; padding: 1px 3px; border-radius: 4px; background: var(--blue-soft); color: var(--on-blue-soft); white-space: nowrap; overflow: hidden; }
+.cell .ev.fixed { background: var(--teal-soft); color: var(--on-teal-soft); }
+.cell .ev.hi { background: var(--red-soft); color: var(--on-red-soft); }
+.cell .ev.done { opacity: .5; text-decoration: line-through; }
+.cell .more { font-size: 10px; font-weight: 700; color: var(--ink-3); padding-left: 3px; }
+.cal-key { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; font-size: 11.5px; color: var(--ink-2); font-weight: 600; padding-top: 6px; }
+.cal-key .k { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--blue-soft); margin-right: 5px; vertical-align: -1px; box-shadow: inset 0 0 0 1px var(--on-blue-soft); }
+.cal-key .k.fixed { background: var(--teal-soft); box-shadow: inset 0 0 0 1px var(--on-teal-soft); }
+.cal-key .k.hi { background: var(--red-soft); box-shadow: inset 0 0 0 1px var(--on-red-soft); }
 
-/* Claude tab */
+/* Upcoming day tiles */
+.daytile { display: grid; gap: 6px; align-content: start; }
+.daytile .dn { font-size: 17px; font-weight: 800; letter-spacing: -.02em; }
+.daytile .first { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.daytile .first b { font-weight: 700; margin-right: 6px; }
+.load { display: flex; gap: 3px; margin-top: 2px; }
+.load i { flex: 1; height: 6px; border-radius: 2px; background: var(--tile-2); }
+.load i.on { background: var(--blue); }
+.load.busy i.on { background: var(--red); }
+.tmr { padding: 6px 0; box-shadow: 0 12px 28px -18px rgba(20, 33, 61, .45); }
+.tmr .hd { color: var(--ink-2); }
+.tmr .hd strong { color: var(--blue); font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
+
+/* Claude + settings */
 .how { padding: 16px; display: grid; gap: 10px; }
+.how strong { font-size: 17px; }
 .how p { margin: 0; color: var(--ink-2); font-size: 14px; }
 .how ol { margin: 0; padding-left: 20px; color: var(--ink-2); font-size: 14px; display: grid; gap: 6px; }
 .how code, .urlbox { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; }
-.urlbox { background: var(--fill); border-radius: 10px; padding: 10px 12px; overflow-wrap: anywhere; user-select: all; -webkit-user-select: all; }
-.chg { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; padding: 12px 14px 12px 16px; }
-.chg .name { font-weight: 700; font-size: 14px; overflow-wrap: anywhere; }
+.urlbox { background: var(--tile-2); border-radius: 12px; padding: 10px 12px; overflow-wrap: anywhere; user-select: all; -webkit-user-select: all; }
+.chg { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; padding: 12px 16px; }
+.chg .name { font-weight: 600; font-size: 14px; overflow-wrap: anywhere; }
 .chg .sub { font-size: 12.5px; color: var(--ink-2); }
-.chg.undone .name { color: var(--ink-2); text-decoration: line-through; }
+.chg.undone .name { color: var(--ink-3); text-decoration: line-through; }
 .chg .act { grid-row: 1 / 3; grid-column: 2; }
-
-/* Settings */
-.form { padding: 6px 0; }
 .frow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 10px 16px; }
-.frow label, .frow .lbl { font-weight: 700; font-size: 14px; }
+.frow label, .frow .lbl2 { font-weight: 600; font-size: 14px; }
 .frow small { grid-column: 1 / -1; color: var(--ink-2); font-size: 12.5px; }
 .frow.stack { grid-template-columns: minmax(0, 1fr); }
-.field { min-height: 44px; border-radius: 10px; border: 1px solid transparent; background: var(--fill); padding: 0 12px; font-size: 16px; width: 100%; min-width: 0; }
-.field:focus { border-color: var(--accent); outline: none; background: var(--card); }
+.field { min-height: 46px; border-radius: var(--r-ctl); border: 1.5px solid transparent; background: var(--tile-2); padding: 0 12px; font-size: 16px; width: 100%; min-width: 0; }
+.field:focus { border-color: var(--focus); outline: none; }
 textarea.field { padding: 10px 12px; min-height: 92px; resize: vertical; line-height: 1.4; }
 input[type="time"].field, input[type="date"].field { -webkit-appearance: none; appearance: none; }
 .frow input[type="time"].field { width: 128px; }
 .btns { display: flex; gap: 8px; flex-wrap: wrap; }
-.btn { min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: var(--fill); font-weight: 700; }
-.btn.primary { background: var(--accent); color: var(--accent-ink); }
-.btn.danger { color: var(--bad); }
-.btn.armed { background: var(--bad); color: #fff; }
+.btn { min-height: 46px; padding: 0 18px; border-radius: var(--r-ctl); border: 0; background: var(--tile-2); font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--page); }
+.btn.danger { color: var(--red); }
+.btn.armed { background: var(--red); color: #fff; }
 
-/* Tab bar */
+/* Tab bar: a dark pill with a lime add button */
 .tabbar { position: fixed; left: 0; right: 0; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 20; pointer-events: none;
-  padding-left: max(14px, env(safe-area-inset-left, 0px)); padding-right: max(14px, env(safe-area-inset-right, 0px)); filter: drop-shadow(0 6px 14px rgba(0,0,0,.14)); }
-.tabbar .in { pointer-events: auto; max-width: 440px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; height: 66px;
-  border-radius: 22px; background: color-mix(in srgb, var(--card) 94%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: var(--ring); }
-.tab { border: 0; background: none; display: grid; justify-items: center; gap: 2px; padding: 8px 0; font-size: 10.5px; font-weight: 700; color: var(--ink-2); position: relative; }
-.tab svg { width: 23px; height: 23px; }
+  padding-left: max(14px, env(safe-area-inset-left, 0px)); padding-right: max(14px, env(safe-area-inset-right, 0px)); }
+.tabbar .in { pointer-events: auto; max-width: 420px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; height: 64px; padding: 0 6px;
+  border-radius: 24px; background: var(--tile); box-shadow: 0 10px 30px -12px rgba(20, 33, 61, .35), 0 0 0 1px var(--line); }
+.tab { border: 0; background: none; display: grid; justify-items: center; gap: 2px; padding: 8px 0; font-size: 10.5px; font-weight: 600; color: var(--ink-3); position: relative; border-radius: 16px; }
+.tab svg { width: 22px; height: 22px; }
 .tab[aria-current="page"] { color: var(--ink); }
-.tab .badge { position: absolute; top: 4px; left: calc(50% + 6px); min-width: 16px; height: 16px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); font-size: 10px; font-weight: 800; display: grid; place-items: center; padding: 0 4px; }
-.fab { justify-self: center; width: 50px; height: 50px; border-radius: 50%; border: 0; background: var(--ink); color: var(--card); display: grid; place-items: center; transition: transform .12s; }
+.tab[aria-current="page"]::after { content: ""; position: absolute; bottom: 2px; width: 4px; height: 4px; border-radius: 50%; background: var(--red); }
+.tab .badge { position: absolute; top: 4px; left: calc(50% + 6px); min-width: 16px; height: 16px; border-radius: 8px; background: var(--red); color: var(--on-red); font-size: 10px; font-weight: 800; display: grid; place-items: center; padding: 0 4px; }
+.fab { justify-self: center; width: 48px; height: 48px; border-radius: 16px; border: 0; background: var(--red); color: var(--on-red); display: grid; place-items: center; transition: transform .12s; }
 .fab:active { transform: scale(.94); }
-.fab svg { width: 26px; height: 26px; }
+.fab svg { width: 24px; height: 24px; }
 
 /* Bottom sheet */
-.backdrop { position: fixed; inset: 0; z-index: 30; background: rgba(4,9,20,.5); display: grid; align-items: end; }
-.modal { background: var(--card); border-radius: 28px 28px 0 0; width: 100%; max-width: 560px; margin: 0 auto; max-height: 92%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
-  padding: 10px max(18px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px));
-  display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); animation: up .38s cubic-bezier(.32,.72,0,1); }
+.backdrop { position: fixed; inset: 0; z-index: 30; background: rgba(14, 12, 30, .5); display: grid; align-items: end; }
+.modal { background: var(--page); border-radius: 28px 28px 0 0; width: 100%; max-width: 560px; margin: 0 auto; max-height: 92%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); animation: up .38s cubic-bezier(.32,.72,0,1); }
 @keyframes up { from { transform: translateY(100%); } }
-@media (prefers-reduced-motion: reduce) { .modal { animation: none; } }
-.grab { width: 40px; height: 5px; border-radius: 9px; background: var(--line); justify-self: center; }
-.mhead { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.modal h3 { margin: 0; font-family: var(--display); font-size: 20px; letter-spacing: -.02em; }
-.fl { display: grid; gap: 6px; }
-.fl > span { font-size: 12.5px; font-weight: 800; color: var(--ink-2); letter-spacing: .02em; }
+@media (prefers-reduced-motion: reduce) { .modal { animation: none; } .fab { transition: none; } }
+.grab { width: 40px; height: 5px; border-radius: 9px; background: var(--ink-3); opacity: .5; justify-self: center; }
+.mhead { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 0 2px; }
+.modal h3 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+.ftile { background: var(--tile); border-radius: 18px; padding: 12px 14px; display: grid; gap: 8px; min-width: 0; }
+.ftile > span { font-size: 13px; font-weight: 600; color: var(--ink-2); }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.chips button { min-height: 36px; padding: 0 12px; border-radius: 999px; border: 0; background: var(--fill); font-weight: 700; font-size: 13.5px; }
-.chips button[aria-pressed="true"] { background: var(--ink); color: var(--card); }
-.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--fill); border-radius: 10px; padding: 3px; gap: 3px; }
-.seg button { border: 0; background: none; min-height: 38px; border-radius: 8px; font-weight: 700; font-size: 14px; color: var(--ink-2); }
-.seg button[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: var(--shadow), var(--ring); }
+.chips button { min-height: 36px; padding: 0 12px; border-radius: 10px; border: 0; background: var(--tile-2); font-weight: 600; font-size: 13.5px; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--page); }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--tile-2); border-radius: 12px; padding: 3px; gap: 3px; }
+.seg button { border: 0; background: none; min-height: 38px; border-radius: 10px; font-weight: 600; font-size: 14px; color: var(--ink-2); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--page); }
 .hint { font-size: 12.5px; color: var(--ink-2); margin: 0; }
-.err { color: var(--bad); font-size: 13px; min-height: 1em; }
+.err { color: var(--red); font-size: 13px; min-height: 1em; }
 
 /* Sign-in */
-.auth { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: color-mix(in srgb, var(--sheet) 88%, transparent);
+.auth { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: color-mix(in srgb, var(--page) 90%, transparent);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 16px; }
-.auth-card { width: 100%; max-width: 380px; background: var(--card); border-radius: 22px; box-shadow: var(--ring); padding: 26px 22px; display: grid; gap: 12px; justify-items: center; text-align: center; }
+.auth-card { width: 100%; max-width: 380px; background: var(--tile); border-radius: 26px; padding: 26px 22px; display: grid; gap: 12px; justify-items: center; text-align: center; }
 .auth-card img { border-radius: 15px; }
-.auth-card h2 { margin: 4px 0 0; font-family: var(--display); font-size: 24px; letter-spacing: -.02em; }
+.auth-card h2 { margin: 4px 0 0; font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
 .auth-card p { margin: 0; color: var(--ink-2); font-size: 14px; }
 .auth-card .field, .auth-card .btn { width: 100%; }
 .auth-links { display: flex; justify-content: space-between; width: 100%; }
 
-.toast { position: fixed; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 60; background: var(--ink); color: var(--card);
-  padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 14px; max-width: calc(100% - 32px); box-shadow: 0 8px 24px -8px rgba(0,0,0,.4); }
+.toast { position: fixed; left: 50%; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 60; background: var(--ink); color: var(--page);
+  padding: 10px 16px; border-radius: 14px; font-weight: 700; font-size: 14px; max-width: calc(100% - 32px); box-shadow: 0 8px 24px -8px rgba(0,0,0,.35); }
 </style>
 </head>
 <body>
 <header class="top"><div class="wrap">
   <div class="topbar">
-    <button class="navbtn" id="prevDay" data-act="shiftday" data-n="-1" aria-label="Previous day"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <h1 class="ptitle" id="pageTitle">Today</h1>
-    <button class="navbtn" id="nextDay" data-act="shiftday" data-n="1" aria-label="Next day"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="ttl"><h1 id="pageTitle">Today</h1><p id="pageSub"></p></div>
     <div class="tright">
-      <button class="pill plain" id="todayBtn" data-act="gotoday" hidden>Today</button>
-      <span class="pill" id="syncPill" data-state="off">Loading</span>
+      <span class="sync" id="syncPill">Loading</span>
+      <button class="chipbtn" id="todayBtn" data-act="gotoday" hidden>Today</button>
+      <button class="navbtn" id="prevDay" data-act="shiftday" data-n="-1" aria-label="Previous day"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="navbtn" id="nextDay" data-act="shiftday" data-n="1" aria-label="Next day"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button class="navbtn" id="setBtn" data-tab="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button>
     </div>
   </div>
-  <section class="hero" id="hero" aria-live="polite"></section>
 </div></header>
 
 <main class="sheet"><div class="wrap" id="view"></div></main>
 
 <nav class="tabbar" aria-label="Sections"><div class="in">
-  <button class="tab" data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Today</button>
-  <button class="tab" data-tab="upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Upcoming</button>
-  <button class="fab" data-act="add" aria-label="Add to schedule"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></button>
-  <button class="tab" data-tab="claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4.5 5.5h15v10h-8l-4.5 3.5v-3.5h-2.5z"/><path d="M8.5 10.5h7"/></svg>Claude<span class="badge" id="chgBadge" hidden></span></button>
-  <button class="tab" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>Settings</button>
+  <button class="tab" data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="7" height="9" rx="2"/><rect x="13" y="4" width="7" height="5" rx="2"/><rect x="13" y="11" width="7" height="9" rx="2"/><rect x="4" y="15" width="7" height="5" rx="2"/></svg>Today</button>
+  <button class="tab" data-tab="upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h3M10 6h10M4 12h3M10 12h10M4 18h3M10 18h10"/></svg>Upcoming</button>
+  <button class="fab" data-act="add" aria-label="Add to schedule"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button class="tab" data-tab="month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01" stroke-width="2.6" stroke-linecap="round"/></svg>Month</button>
+  <button class="tab" data-tab="claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4.5 5.5h15v10h-8l-4.5 3.5v-3.5h-2.5z"/><path d="M8.5 10.5h7"/></svg>Claude<span class="badge" id="chgBadge" hidden></span></button>
 </div></nav>
 
 <div id="sheetRoot"></div>
@@ -262,7 +295,7 @@ input[type="time"].field, input[type="date"].field { -webkit-appearance: none; a
 /* ---------- state ---------- */
 const PX_PER_MIN = 1;            // timeline scale: 60px per hour
 const S = {
-  tab: "today", day: todayISO(), mode: "loading", stale: false,
+  tab: "today", day: todayISO(), month: todayISO().slice(0, 7), sel: todayISO(), mode: "loading", stale: false,
   tasks: [], changes: [], profile: null, connector: false, newUrl: null,
   sheet: null, armed: null, seenChangeId: +(lsGet("plan-seen-change") || 0),
 };
@@ -277,11 +310,13 @@ function parseISO(s) { const [y, m, d] = s.split("-").map(Number); return new Da
 function addDays(s, n) { const d = parseISO(s); d.setDate(d.getDate() + n); return iso(d); }
 function dayLabel(s, opts = { weekday: "long", month: "short", day: "numeric" }) { return parseISO(s).toLocaleDateString("en-US", opts); }
 function relDay(s) { const t = todayISO(); return s === t ? "Today" : s === addDays(t, 1) ? "Tomorrow" : s === addDays(t, -1) ? "Yesterday" : dayLabel(s, { weekday: "short", month: "short", day: "numeric" }); }
+function dueWords(s) { const r = relDay(s); return r === "Today" || r === "Tomorrow" || r === "Yesterday" ? r.toLowerCase() : dayLabel(s, { weekday: "long" }) + (s > addDays(todayISO(), 6) ? ", " + dayLabel(s, { month: "short", day: "numeric" }) : ""); }
 function hm(t) { return t ? String(t).slice(0, 5) : null; }
 function toMin(t) { const [h, m] = hm(t).split(":").map(Number); return h * 60 + m; }
 function fromMin(n) { n = Math.max(0, Math.min(1439, Math.round(n))); return String(Math.floor(n / 60)).padStart(2, "0") + ":" + String(n % 60).padStart(2, "0"); }
 function nowMin() { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); }
 function fmtTime(t) { if (!t) return ""; let [h, m] = hm(t).split(":").map(Number); const ap = h < 12 ? "AM" : "PM"; h = h % 12 || 12; return h + ":" + String(m).padStart(2, "0") + " " + ap; }
+function fmtShort(t) { if (!t) return ""; let [h, m] = hm(t).split(":").map(Number); h = h % 12 || 12; return h + ":" + String(m).padStart(2, "0"); }
 function fmtHour(h) { const ap = h < 12 || h === 24 ? "AM" : "PM"; return (h % 12 || 12) + " " + ap; }
 function fmtDur(min) { min = Math.max(0, Math.round(min)); const h = Math.floor(min / 60), m = min % 60; return h && m ? `${h}h ${m}m` : h ? `${h}h` : `${m}m`; }
 function endOf(t) { return t.start_time ? fromMin(Math.min(1440, toMin(t.start_time) + t.duration_min)) : null; }
@@ -291,7 +326,8 @@ function ago(ts) {
   if (s < 60) return "just now"; if (s < 3600) return Math.floor(s / 60) + " min ago"; if (s < 86400) return Math.floor(s / 3600) + " h ago";
   return new Date(ts).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function prof() { return S.profile || { timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, day_start: "08:00", day_end: "23:00", focus_hours: "", notes: "" }; }
+function prof() { return S.profile || prof_default(); }
+function prof_default() { return { timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, day_start: "08:00", day_end: "23:00", focus_hours: "", notes: "" }; }
 function tasksOn(day) { return S.tasks.filter(t => t.day === day); }
 function byTime(a, b) { return (a.start_time ? toMin(a.start_time) : 9999) - (b.start_time ? toMin(b.start_time) : 9999) || (b.priority - a.priority) || a.title.localeCompare(b.title); }
 function timedMinutes(list) { return list.filter(t => t.start_time).reduce((a, t) => a + t.duration_min, 0); }
@@ -311,7 +347,7 @@ const COLS = "id,title,notes,day,start_time,duration_min,kind,priority,due,done,
 function clean(t) { return { ...t, start_time: hm(t.start_time) }; }
 
 function liveApi() {
-  const from = addDays(todayISO(), -30);
+  const from = addDays(todayISO(), -100);   // enough history for the Month tab to show the last few months
   return {
     async load() {
       const [tasks, prof, chg, con] = await Promise.all([
@@ -351,7 +387,6 @@ function liveApi() {
     async dropConnector() { const { error } = await sb.from("plan_connector").delete().eq("user_id", uid); if (error) throw error; S.connector = false; },
   };
 }
-function prof_default() { return { timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, day_start: "08:00", day_end: "23:00", focus_hours: "", notes: "" }; }
 function pick(t) {
   return { title: t.title, notes: t.notes || "", day: t.day || null, start_time: t.day && t.start_time ? hm(t.start_time) : null, duration_min: +t.duration_min || 30,
     kind: t.kind === "fixed" ? "fixed" : "flexible", priority: +t.priority || 2, due: t.due || null, done: !!t.done, done_at: t.done ? (t.done_at || new Date().toISOString()) : null };
@@ -363,27 +398,41 @@ async function sha256(s) { const d = await crypto.subtle.digest("SHA-256", new T
 function previewApi() {
   const t = todayISO(), id = () => "p" + Math.random().toString(36).slice(2, 9);
   const mk = (o) => ({ id: id(), notes: "", duration_min: 60, kind: "flexible", priority: 2, due: null, done: false, done_at: null, source: "app", created_at: new Date().toISOString(), ...o });
+  // Sample day built around the current time, so "now" and "next" always have something to show.
+  const n = nowMin(), at = (off) => fromMin(Math.max(0, Math.min(1380, Math.floor((n + off) / 15) * 15)));
   S.tasks = [
-    mk({ title: "Gym", day: t, start_time: "07:30", duration_min: 60 }),
-    mk({ title: "STATS 100B lecture", day: t, start_time: "10:00", duration_min: 75, kind: "fixed" }),
-    mk({ title: "Problem set 6", day: t, start_time: "13:00", duration_min: 120, priority: 3, due: addDays(t, 2), source: "claude" }),
-    mk({ title: "Office hours", day: t, start_time: "14:00", duration_min: 45, kind: "fixed" }),
-    mk({ title: "Dinner with Alex", day: t, start_time: "18:30", duration_min: 90 }),
-    mk({ title: "Read ML paper", day: t, start_time: "20:30", duration_min: 60, source: "claude" }),
+    mk({ title: "Gym", day: t, start_time: at(-300), duration_min: 60, done: true, done_at: new Date().toISOString() }),
+    mk({ title: "STATS 100B lecture", day: t, start_time: at(-180), duration_min: 75, kind: "fixed", done: true, done_at: new Date().toISOString() }),
+    mk({ title: "Problem set 6", day: t, start_time: at(-45), duration_min: 120, priority: 3, due: addDays(t, 2), source: "claude" }),
+    mk({ title: "Office hours", day: t, start_time: at(90), duration_min: 45, kind: "fixed" }),
+    mk({ title: "Dinner with Alex", day: t, start_time: at(165), duration_min: 75 }),
+    mk({ title: "Read ML paper", day: t, start_time: at(255), duration_min: 45, source: "claude" }),
     mk({ title: "Reply to recruiter email", day: t, duration_min: 15, priority: 3 }),
     mk({ title: "Laundry", day: addDays(t, -1), duration_min: 45 }),
-    mk({ title: "STATS 100B lecture", day: addDays(t, 2), start_time: "10:00", duration_min: 75, kind: "fixed" }),
     mk({ title: "Midterm review", day: addDays(t, 1), start_time: "15:00", duration_min: 120, priority: 3, source: "claude" }),
     mk({ title: "Internship applications", day: addDays(t, 1), start_time: "19:00", duration_min: 90 }),
-    mk({ title: "Midterm", day: addDays(t, 3), start_time: "09:00", duration_min: 110, kind: "fixed", priority: 3 }),
+    mk({ title: "STATS 100B lecture", day: addDays(t, 2), start_time: "10:00", duration_min: 75, kind: "fixed" }),
+    mk({ title: "Study group", day: addDays(t, 2), start_time: "16:00", duration_min: 90 }),
+    mk({ title: "STATS midterm", day: addDays(t, 3), start_time: "09:00", duration_min: 110, kind: "fixed", priority: 3 }),
+    mk({ title: "Celebrate", day: addDays(t, 3), start_time: "19:00", duration_min: 120 }),
     mk({ title: "Groceries", day: addDays(t, 4), duration_min: 45 }),
+    mk({ title: "Hike", day: addDays(t, 5), start_time: "09:00", duration_min: 240 }),
     mk({ title: "Plan spring classes", day: null, duration_min: 60 }),
+    mk({ title: "Dentist", day: addDays(t, -6), start_time: "11:00", duration_min: 45, kind: "fixed", done: true, done_at: new Date().toISOString() }),
+    mk({ title: "Quiz 3", day: addDays(t, -3), start_time: "10:00", duration_min: 30, kind: "fixed", done: true, done_at: new Date().toISOString() }),
+    mk({ title: "Project proposal", day: addDays(t, 8), start_time: "14:00", duration_min: 120, priority: 3, due: addDays(t, 9) }),
+    mk({ title: "STATS 100B lecture", day: addDays(t, 9), start_time: "10:00", duration_min: 75, kind: "fixed" }),
+    mk({ title: "Career fair", day: addDays(t, 9), start_time: "13:00", duration_min: 180 }),
+    mk({ title: "Haircut", day: addDays(t, 9), start_time: "17:30", duration_min: 30 }),
+    mk({ title: "Gym", day: addDays(t, 9), start_time: "19:00", duration_min: 60 }),
+    mk({ title: "Fly home", day: addDays(t, 15), start_time: "08:00", duration_min: 300, kind: "fixed" }),
+    mk({ title: "Thanksgiving dinner", day: addDays(t, 17), start_time: "17:00", duration_min: 180, kind: "fixed" }),
   ];
-  S.profile = { ...prof_default(), day_start: "07:00", day_end: "23:00", focus_hours: "9am–12pm" };
+  S.profile = { ...prof_default(), day_start: "07:00", day_end: "23:00", focus_hours: "9am to 12pm" };
   S.changes = [
-    { id: 3, task_id: S.tasks[9].id, action: "add", summary: "Added “Midterm review” tomorrow 3:00 PM (2h)", undone: false, created_at: new Date(Date.now() - 9e5).toISOString(), after: S.tasks[9] },
-    { id: 2, task_id: S.tasks[2].id, action: "update", summary: "Moved “Problem set 6” to today 1:00 PM", undone: false, created_at: new Date(Date.now() - 1e6).toISOString(), before: { ...S.tasks[2], day: addDays(t, 1), start_time: "16:00" } },
-    { id: 1, task_id: S.tasks[5].id, action: "add", summary: "Added “Read ML paper” today 8:30 PM (1h)", undone: false, created_at: new Date(Date.now() - 1.1e6).toISOString(), after: S.tasks[5] },
+    { id: 3, task_id: S.tasks[8].id, action: "add", summary: "Added “Midterm review” tomorrow 3:00 PM (2h)", undone: false, created_at: new Date(Date.now() - 9e5).toISOString(), after: S.tasks[8] },
+    { id: 2, task_id: S.tasks[2].id, action: "update", summary: "Moved “Problem set 6” to today", undone: false, created_at: new Date(Date.now() - 1e6).toISOString(), before: { ...S.tasks[2], day: addDays(t, 1), start_time: "16:00" } },
+    { id: 1, task_id: S.tasks[5].id, action: "add", summary: "Added “Read ML paper” today", undone: false, created_at: new Date(Date.now() - 1.1e6).toISOString(), after: S.tasks[5] },
   ];
   return {
     async load() {},
@@ -402,89 +451,143 @@ function previewApi() {
 
 /* ---------- views ---------- */
 function render() {
-  const onDay = S.tab === "today";
+  const onDay = S.tab === "today", onMonth = S.tab === "month", isToday = S.day === todayISO(), thisMonth = S.month === todayISO().slice(0, 7);
   document.querySelectorAll(".tab").forEach(b => b.dataset.tab === S.tab ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
-  const title = document.getElementById("pageTitle");
-  title.textContent = onDay ? (S.day === todayISO() ? "Today" : relDay(S.day)) : { upcoming: "Upcoming", claude: "Claude", settings: "Settings" }[S.tab];
-  document.getElementById("prevDay").hidden = document.getElementById("nextDay").hidden = !onDay;
-  document.getElementById("todayBtn").hidden = !onDay || S.day === todayISO();
+  const mDate = parseISO(S.month + "-01"), mCount = S.tasks.filter(t => t.day && t.day.startsWith(S.month)).length;
+  document.getElementById("pageTitle").textContent = onDay ? (isToday ? "Today" : relDay(S.day) === "Tomorrow" || relDay(S.day) === "Yesterday" ? relDay(S.day) : dayLabel(S.day, { weekday: "long" }))
+    : onMonth ? mDate.toLocaleDateString("en-US", { month: "long" })
+    : { upcoming: "Coming up", claude: "Claude", settings: "Settings" }[S.tab];
+  document.getElementById("pageSub").textContent = onDay ? dayLabel(S.day, { weekday: "long", month: "long", day: "numeric" }) : S.tab === "upcoming" ? "The next 7 days"
+    : onMonth ? `${mDate.getFullYear()}, ${mCount ? mCount + (mCount === 1 ? " thing" : " things") + " planned" : "nothing planned yet"}` : "";
+  document.getElementById("prevDay").hidden = document.getElementById("nextDay").hidden = !(onDay || onMonth);
+  document.getElementById("prevDay").setAttribute("aria-label", onMonth ? "Previous month" : "Previous day");
+  document.getElementById("nextDay").setAttribute("aria-label", onMonth ? "Next month" : "Next day");
+  const tb = document.getElementById("todayBtn");
+  tb.hidden = !((onDay && !isToday) || (onMonth && !thisMonth));
+  document.getElementById("setBtn").hidden = S.tab === "settings";
   const pill = document.getElementById("syncPill");
-  pill.textContent = S.mode === "live" ? (S.stale ? "Offline" : "Synced") : S.mode === "preview" ? "Preview" : "Loading";
-  pill.dataset.state = S.mode === "live" && !S.stale ? "on" : "off";
+  pill.textContent = S.mode === "live" ? (S.stale ? "Offline" : "") : S.mode === "preview" ? "Preview" : "Loading";
+  pill.hidden = !pill.textContent || !tb.hidden;
   const fresh = S.changes.filter(c => c.id > S.seenChangeId && !c.undone).length, badge = document.getElementById("chgBadge");
   badge.hidden = !fresh || S.tab === "claude"; badge.textContent = fresh;
-  const hero = document.getElementById("hero");
-  hero.hidden = !onDay; if (onDay) hero.innerHTML = vHero();
-  const view = document.getElementById("view");
-  view.innerHTML = S.mode === "loading" ? `<div class="notice">Loading your schedule…</div>` : ({ today: vToday, upcoming: vUpcoming, claude: vClaude, settings: vSettings })[S.tab]();
+  document.getElementById("view").innerHTML = S.mode === "loading" ? `<div class="tile"><p class="notice">Loading your schedule…</p></div>`
+    : ({ today: vToday, upcoming: vUpcoming, month: vMonth, claude: vClaude, settings: vSettings })[S.tab]();
 }
 
-function vHero() {
-  const list = tasksOn(S.day), isToday = S.day === todayISO(), done = list.filter(t => t.done).length;
-  const stats = (a, b, c) => `<div class="stats"><div class="stat"><span>${a[0]}</span><strong>${a[1]}</strong></div><div class="stat"><span>${b[0]}</span><strong>${b[1]}</strong></div><div class="stat"><span>${c[0]}</span><strong>${c[1]}</strong></div></div>`;
-  if (!isToday) {
-    return `<div><div class="eyebrow">${esc(dayLabel(S.day))}</div><div class="now-title">${list.length ? list.length + (list.length === 1 ? " thing" : " things") + " planned" : "Nothing planned yet"}</div>
-      <div class="now-sub">${list.filter(t => t.kind === "fixed").length} fixed · ${list.filter(t => !t.start_time).length} anytime</div></div>`
-      + stats(["Done", `${done}/${list.length}`], ["Planned", fmtDur(plannedMinutes(list))], ["Free", fmtDur(Math.max(0, dayCapacity() - timedMinutes(list)))]);
+// Month: a calendar grid (weeks start Sunday) with each day's tasks as small bars, and the picked day's list below.
+function shiftMonth(m, n) { const d = parseISO(m + "-01"); d.setMonth(d.getMonth() + n); return iso(d).slice(0, 7); }
+function vMonth() {
+  const first = parseISO(S.month + "-01"), start = addDays(S.month + "-01", -first.getDay()), today = todayISO();
+  const last = new Date(first.getFullYear(), first.getMonth() + 1, 0), weeks = Math.ceil((first.getDay() + last.getDate()) / 7);
+  let cells = "";
+  for (let i = 0; i < weeks * 7; i++) {
+    const d = addDays(start, i), list = tasksOn(d).sort(byTime), out = !d.startsWith(S.month);
+    const shown = list.slice(0, 3), more = list.length - shown.length;
+    const evs = shown.map(t => `<span class="ev${t.kind === "fixed" ? " fixed" : ""}${t.priority === 3 && !t.done ? " hi" : ""}${t.done ? " done" : ""}">${esc(t.title)}</span>`).join("");
+    cells += `<button class="cell${out ? " out" : ""}${d === today ? " today" : ""}${d === S.sel ? " sel" : ""}" data-act="selday" data-day="${d}" aria-label="${esc(dayLabel(d))}, ${list.length} planned"${d === S.sel ? ' aria-pressed="true"' : ""}>
+      <span class="dn">${parseISO(d).getDate()}</span>${evs}${more > 0 ? `<span class="more">+${more}</span>` : ""}</button>`;
   }
-  const n = nowMin(), timed = list.filter(t => t.start_time).sort(byTime);
-  const cur = timed.find(t => toMin(t.start_time) <= n && n < toMin(t.start_time) + t.duration_min && !t.done) || null;
-  const next = timed.find(t => toMin(t.start_time) > n && !t.done);
-  let top;
-  if (cur) {
-    const s = toMin(cur.start_time), left = s + cur.duration_min - n, frac = (n - s) / cur.duration_min;
-    top = `<div class="eyebrow">Now · ${fmtDur(left)} left</div><div class="now-title">${esc(cur.title)}</div>
-      <div class="now-sub">${fmtTime(cur.start_time)} – ${fmtTime(endOf(cur))}${next ? ` · Next: <strong>${esc(next.title)}</strong> at ${fmtTime(next.start_time)}` : ""}</div>
-      <div class="nowbar"><i style="width:${(frac * 100).toFixed(1)}%"></i></div>`;
-  } else if (next) {
-    top = `<div class="eyebrow">Up next · in ${fmtDur(toMin(next.start_time) - n)}</div><div class="now-title">${esc(next.title)}</div>
-      <div class="now-sub">${fmtTime(next.start_time)} – ${fmtTime(endOf(next))}${next.kind === "fixed" ? " · fixed" : ""}</div>`;
-  } else {
-    const open = list.filter(t => !t.done && !t.start_time);
-    top = `<div class="eyebrow">${list.length ? "Nothing else on the clock" : "Free day"}</div><div class="now-title">${open.length ? `${open.length} anytime ${open.length === 1 ? "task" : "tasks"} left` : list.length ? "You're done for today" : "Nothing planned yet"}</div>
-      <div class="now-sub">${list.length ? "Add something, or ask Claude to plan the rest of your day." : "Tap + to add a block, or ask Claude in the Claude app."}</div>`;
-  }
-  const p = prof(), endMin = toMin(p.day_end), from = Math.max(n, toMin(p.day_start));
-  const busyLeft = timed.filter(t => !t.done).reduce((a, t) => { const s = Math.max(from, toMin(t.start_time)), e = Math.min(endMin, toMin(t.start_time) + t.duration_min); return a + Math.max(0, e - s); }, 0);
-  return `<div>${top}</div>` + stats(["Done", `${done}/${list.length}`], ["Planned", fmtDur(plannedMinutes(list))], ["Free left", fmtDur(Math.max(0, endMin - from - busyLeft))]);
+  const sel = tasksOn(S.sel).sort(byTime);
+  return `<section class="tile cal" aria-label="${esc(first.toLocaleDateString("en-US", { month: "long", year: "numeric" }))}">
+      <div class="cal-h" aria-hidden="true">${["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(w => `<span>${w}</span>`).join("")}</div>
+      <div class="cal-g">${cells}</div>
+      <div class="cal-key"><span><i class="k"></i>Flexible</span><span><i class="k fixed"></i>Fixed</span><span><i class="k hi"></i>High priority</span></div>
+    </section>
+    <section class="tile flush tmr"><div class="hd"><strong>${esc(relDay(S.sel) === "Today" || relDay(S.sel) === "Tomorrow" ? relDay(S.sel) : dayLabel(S.sel, { weekday: "long" }))}</strong><span>${esc(dayLabel(S.sel, { month: "long", day: "numeric" }))}</span></div>
+      ${sel.length ? `<div class="rows">${sel.map(x => rowHTML(x, { action: `<span class="when">${x.start_time ? fmtShort(x.start_time) : "anytime"}</span>` })).join("")}</div>` : `<p class="empty">Nothing planned.</p>`}
+      <div class="hd" style="padding-bottom:8px"><button class="link" data-act="add" data-day="${S.sel}">Add to this day</button><button class="link" data-act="openday" data-day="${S.sel}">See timeline</button></div></section>`;
 }
 
+function checkBtn(t) {
+  return `<button class="check" data-act="toggle" data-id="${t.id}" aria-pressed="${t.done}" aria-label="${t.done ? "Mark not done" : "Mark done"}: ${esc(t.title)}"><i>${t.done ? IC.check : ""}</i></button>`;
+}
 function rowHTML(t, opts = {}) {
   const tags = [];
   if (t.kind === "fixed") tags.push(`<span class="tag">Fixed</span>`);
   if (t.priority === 3) tags.push(`<span class="tag hi">High</span>`);
   if (t.source === "claude") tags.push(`<span class="tag ai">Claude</span>`);
-  if (t.due) tags.push(`<span>Due ${esc(relDay(t.due))}</span>`);
-  const when = t.start_time ? fmtTime(t.start_time) : opts.showDay && t.day ? esc(relDay(t.day)) : "";
-  return `<div class="row${t.done ? " done" : ""}">
-    <button class="check" data-act="toggle" data-id="${t.id}" aria-pressed="${t.done}" aria-label="${t.done ? "Mark not done" : "Mark done"}: ${esc(t.title)}"><i>${t.done ? IC.check : ""}</i></button>
-    <button class="main" data-act="edit" data-id="${t.id}"><span class="name">${esc(t.title)}</span><span class="sub">${fmtDur(t.duration_min)}${tags.length ? " · " : ""}${tags.join(" ")}</span></button>
+  if (t.due && !opts.noDue) tags.push(`<span>due ${esc(dueWords(t.due))}</span>`);
+  const when = t.start_time ? fmtShort(t.start_time) : opts.showDay && t.day ? esc(relDay(t.day)) : "";
+  return `<div class="row${t.done ? " done" : ""}">${checkBtn(t)}
+    <button class="main" data-act="edit" data-id="${t.id}"><span class="name">${esc(t.title)}</span><span class="sub">${fmtDur(t.duration_min)} ${tags.join(" ")}</span></button>
     ${opts.action || `<span class="when">${when}</span>`}
   </div>`;
 }
 
+// Today: now (dark), next (lime), small stats, then the rest of the day.
 function vToday() {
-  const list = tasksOn(S.day), isToday = S.day === todayISO(), out = [];
+  const isToday = S.day === todayISO(), list = tasksOn(S.day), out = [];
+  const timed = list.filter(t => t.start_time).sort(byTime), anytime = list.filter(t => !t.start_time).sort(byTime);
+  const done = list.filter(t => t.done).length;
+
   if (isToday) {
+    const n = nowMin();
+    const cur = timed.find(t => !t.done && toMin(t.start_time) <= n && n < toMin(t.start_time) + t.duration_min) || null;
+    const upcoming = timed.filter(t => !t.done && toMin(t.start_time) > n);
+    const next = upcoming[0] || null;
+    const p = prof(), endMin = toMin(p.day_end), from = Math.max(n, toMin(p.day_start));
+    const busyLeft = timed.filter(t => !t.done).reduce((a, t) => { const s = Math.max(from, toMin(t.start_time)), e = Math.min(endMin, toMin(t.start_time) + t.duration_min); return a + Math.max(0, e - s); }, 0);
+    const freeLeft = Math.max(0, endMin - from - busyLeft);
+
+    // Now
+    if (cur) {
+      const s = toMin(cur.start_time), left = s + cur.duration_min - n;
+      out.push(`<section class="tile now" aria-label="Now">
+        <span class="lbl">Now, ${fmtTime(cur.start_time)} to ${fmtTime(endOf(cur))}</span>
+        <button class="tap title" data-act="edit" data-id="${cur.id}" style="background:none;padding:0;color:inherit">${esc(cur.title)}</button>
+        <div class="foot"><div class="count">${fmtDur(left)}<small>left</small></div><button class="donebtn" data-act="toggle" data-id="${cur.id}">Done</button></div>
+        <div class="bar"><i style="width:${((n - s) / cur.duration_min * 100).toFixed(1)}%"></i></div></section>`);
+    } else {
+      const open = anytime.filter(t => !t.done);
+      out.push(`<section class="tile now" aria-label="Now">
+        <span class="lbl">Now</span>
+        <div class="title">${next ? "Free time" : list.length ? "Nothing else scheduled" : "Nothing planned yet"}</div>
+        <div class="foot"><div class="count">${next ? fmtDur(toMin(next.start_time) - n) + "<small>until next</small>" : open.length ? open.length + `<small>anytime ${open.length === 1 ? "task" : "tasks"} left</small>` : ""}</div></div>
+        ${!next && !open.length ? `<span class="small">Tap + to add something, or ask Claude to plan your day.</span>` : ""}</section>`);
+    }
+
+    // Next + stats
+    const due = S.tasks.filter(t => !t.done && t !== cur && t !== next && t.due && t.due >= isoToday() && t.due <= addDays(isoToday(), 7)).sort((a, b) => a.due.localeCompare(b.due))[0];
+    const tomorrow = tasksOn(addDays(S.day, 1));
+    out.push(`<div class="grid">
+      ${next ? `<button class="tile next tap" data-act="edit" data-id="${next.id}"><span class="lbl">Next, in ${fmtDur(toMin(next.start_time) - n)}</span><span class="mid">${esc(next.title)}</span><span class="small">${fmtTime(next.start_time)}${next.kind === "fixed" ? ", fixed" : ""}</span></button>`
+        : `<div class="tile next"><span class="lbl">Next</span><span class="mid">Nothing else timed</span><span class="small">The rest of today is open</span></div>`}
+      <div class="tile"><span class="lbl">Done today</span><span class="stat">${done}<small> of ${list.length}</small></span><div class="meter"><i style="width:${list.length ? (done / list.length * 100).toFixed(0) : 0}%"></i></div></div>
+      <div class="tile free"><span class="lbl">Free time left</span><span class="stat">${fmtDur(freeLeft)}</span><span class="small">before ${fmtTime(p.day_end)}</span></div>
+      ${due ? `<button class="tile due tap" data-act="edit" data-id="${due.id}"><span class="lbl">Due ${esc(dueWords(due.due))}</span><span class="mid">${esc(due.title)}</span></button>`
+        : `<button class="tile tap" data-act="openday" data-day="${addDays(S.day, 1)}"><span class="lbl">Tomorrow</span><span class="stat">${tomorrow.length}<small> ${tomorrow.length === 1 ? "thing" : "things"}</small></span><span class="small">${tomorrow.filter(t => t.start_time).sort(byTime)[0] ? "First at " + fmtTime(tomorrow.filter(t => t.start_time).sort(byTime)[0].start_time) : "Nothing timed yet"}</span></button>`}
+    </div>`);
+
+    // Later today: everything after next, plus anytime tasks
+    const later = upcoming.slice(1), openAny = anytime.filter(t => !t.done);
+    out.push(`<section class="tile flush"><div class="hd"><h2>Later today</h2><button class="link" data-act="add" data-anytime="1">Add</button></div>
+      ${later.length || openAny.length ? `<div class="rows">${later.map(t => rowHTML(t)).join("")}${openAny.map(t => rowHTML(t, { action: `<span class="when small">anytime</span>` })).join("")}</div>`
+        : `<p class="empty">Nothing else after ${next ? esc(next.title) : "this"}.</p>`}</section>`);
+
+    // Left over from earlier days
     const overdue = S.tasks.filter(t => t.day && t.day < S.day && !t.done).sort((a, b) => a.day.localeCompare(b.day) || byTime(a, b));
-    if (overdue.length) out.push(`<section class="sec"><div class="sec-h"><h2>Left over</h2><span class="meta">${overdue.length} not done</span></div>
-      <div class="card list">${overdue.map(t => rowHTML(t, { action: `<button class="mini ghost" data-act="totoday" data-id="${t.id}">Move to today</button>` })).join("")}</div></section>`);
+    if (overdue.length) out.push(`<section class="tile flush"><div class="hd"><h2>Left over from before</h2></div><div class="rows">${overdue.map(t => rowHTML(t, { action: `<button class="mini ghost" data-act="totoday" data-id="${t.id}">Move to today</button>` })).join("")}</div></section>`);
+  } else {
+    // Another day: a summary tile, then its anytime list.
+    out.push(`<section class="tile now"><span class="lbl" style="color:var(--ink-2)">${esc(dayLabel(S.day, { weekday: "long", month: "long", day: "numeric" }))}</span>
+      <div class="title">${list.length ? list.length + (list.length === 1 ? " thing" : " things") + " planned" : "Nothing planned yet"}</div>
+      <div class="foot"><div class="count">${fmtDur(plannedMinutes(list))}<small>planned</small></div></div></section>`);
+    if (anytime.length) out.push(`<section class="tile flush"><div class="hd"><h2>Anytime</h2></div><div class="rows">${anytime.map(t => rowHTML(t)).join("")}</div></section>`);
   }
-  out.push(`<section class="sec"><div class="sec-h"><h2>Schedule</h2><span class="meta">${list.filter(t => t.start_time).length} blocks</span></div>
-    <div class="card">${timeline(list.filter(t => t.start_time), isToday)}</div>
-    <p class="tl-hint">Tap an empty spot on the timeline to add a block there.</p></section>`);
-  const any = list.filter(t => !t.start_time).sort(byTime);
-  out.push(`<section class="sec"><div class="sec-h"><h2>Anytime</h2><button class="link" data-act="add" data-anytime="1">Add</button></div>
-    <div class="card list">${any.length ? any.map(t => rowHTML(t)).join("") : `<div class="empty"><p>Tasks for this day without a set time go here.</p></div>`}</div></section>`);
+
+  // The whole day on a timeline
+  out.push(`<section class="tile flush"><div class="hd"><h2>Whole day</h2><span class="small">${timed.length ? "Tap a gap to add" : ""}</span></div>
+    ${timeline(timed, isToday)}${!isToday && !anytime.length ? `<p class="empty"><button class="link" data-act="add" data-anytime="1">Add an anytime task</button></p>` : ""}</section>`);
   return out.join("");
 }
+function isoToday() { return todayISO(); }
 
 function timeline(list, isToday) {
   const p = prof();
   let start = Math.floor(toMin(p.day_start) / 60) * 60, end = Math.ceil(toMin(p.day_end) / 60) * 60;
   for (const t of list) { const s = toMin(t.start_time); start = Math.min(start, Math.floor(s / 60) * 60); end = Math.max(end, Math.ceil((s + t.duration_min) / 60) * 60); }
   end = Math.min(end, 1440); if (end <= start) end = start + 60;
-  const H = (end - start) * PX_PER_MIN;
+  const H = (end - start) * PX_PER_MIN, n = nowMin();
   let html = `<div class="tl"><div class="tl-grid" id="tlGrid" data-start="${start}" data-end="${end}" style="height:${H}px">`;
   for (let m = start; m <= end; m += 60) html += `<div class="tl-hour" style="top:${(m - start) * PX_PER_MIN}px"><span>${fmtHour(m / 60)}</span></div>`;
   // Side-by-side columns for overlapping blocks.
@@ -495,29 +598,40 @@ function timeline(list, isToday) {
   flush();
   for (const it of items) {
     const t = it.t, top = (it.s - start) * PX_PER_MIN, h = Math.max(22, (it.e - it.s) * PX_PER_MIN - 2), short = h < 40;
+    const cur = isToday && !t.done && it.s <= n && n < it.e;
     const left = `calc(${(it.col / it.n * 100).toFixed(3)}% + 2px)`, width = `calc(${(100 / it.n).toFixed(3)}% - 4px)`;
-    html += `<button class="blk${t.kind === "fixed" ? " fixed" : ""}${t.done ? " done" : ""}${short ? " short" : ""}" data-act="edit" data-id="${t.id}" style="top:${top}px;height:${h}px;left:${left};width:${width}">
-      ${t.kind === "fixed" ? `<span class="ic">${IC.lock}</span>` : ""}<span class="txt"><span class="bt">${esc(t.title)}</span><span class="bs">${fmtTime(t.start_time)} – ${fmtTime(endOf(t))}</span></span></button>`;
+    html += `<button class="blk${t.kind === "fixed" ? " fixed" : ""}${cur ? " cur" : ""}${t.done ? " done" : ""}${short ? " short" : ""}" data-act="edit" data-id="${t.id}" style="top:${top}px;height:${h}px;left:${left};width:${width}">
+      ${t.kind === "fixed" ? `<span class="ic">${IC.lock}</span>` : ""}<span class="txt"><span class="bt">${esc(t.title)}</span><span class="bs">${fmtShort(t.start_time)} to ${fmtShort(endOf(t))}</span></span></button>`;
   }
-  if (isToday) { const n = nowMin(); if (n >= start && n <= end) html += `<div class="nowline" style="top:${(n - start) * PX_PER_MIN}px"></div>`; }
+  if (isToday && n >= start && n <= end) html += `<div class="nowline" style="top:${(n - start) * PX_PER_MIN}px"></div>`;
   return html + `</div></div>`;
 }
 
+// Upcoming: tomorrow in full, then one tile per day.
 function vUpcoming() {
   const t = todayISO(), cap = dayCapacity(), out = [];
-  for (let i = 1; i <= 7; i++) {
+  const tm = addDays(t, 1), tl = tasksOn(tm).sort(byTime);
+  out.push(`<section class="tile flush tmr"><div class="hd"><strong>Tomorrow</strong><span>${esc(dayLabel(tm, { weekday: "long", month: "short", day: "numeric" }))}</span></div>
+    ${tl.length ? `<div class="rows">${tl.map(x => rowHTML(x, { action: `<span class="when">${x.start_time ? fmtShort(x.start_time) : "anytime"}</span>` })).join("")}</div>` : `<p class="empty">Nothing planned yet.</p>`}
+    <div class="hd" style="padding-bottom:8px"><button class="link" data-act="add" data-day="${tm}">Add to tomorrow</button><button class="link" data-act="openday" data-day="${tm}">See timeline</button></div></section>`);
+  const tiles = [];
+  for (let i = 2; i <= 7; i++) {
     const d = addDays(t, i), list = tasksOn(d).sort(byTime), mins = plannedMinutes(list), frac = Math.min(1, mins / cap), busy = frac >= .6;
-    out.push(`<section class="card"><div class="dayhead"><strong>${esc(relDay(d) === "Tomorrow" ? "Tomorrow · " + dayLabel(d, { weekday: "short", month: "short", day: "numeric" }) : dayLabel(d, { weekday: "long", month: "short", day: "numeric" }))}</strong>
-      <span class="sub">${mins ? fmtDur(mins) : ""}${busy ? ` <span class="chip warn">Busy</span>` : ""}</span></div>
-      <div class="loadbar${busy ? " busy" : ""}"><i style="width:${(frac * 100).toFixed(1)}%"></i></div>
-      <div class="list">${list.map(x => rowHTML(x)).join("")}<button class="addday" data-act="add" data-day="${d}">+ Add to ${esc(dayLabel(d, { weekday: "long" }))}</button></div></section>`);
+    const first = list.filter(x => x.start_time)[0] || list[0];
+    const on = Math.round(frac * 5);
+    tiles.push(`<button class="tile tap daytile" data-act="openday" data-day="${d}" aria-label="${esc(dayLabel(d))}, ${list.length} planned">
+      <span class="lbl">${esc(dayLabel(d, { month: "short", day: "numeric" }))}</span><span class="dn">${esc(dayLabel(d, { weekday: "long" }))}</span>
+      <span class="first">${first ? `${first.start_time ? `<b>${fmtShort(first.start_time)}</b>` : ""}${esc(first.title)}` : `<span class="small">Free</span>`}</span>
+      <span class="small">${list.length ? `${list.length} ${list.length === 1 ? "thing" : "things"}, ${fmtDur(mins)}` : "Nothing yet"}</span>
+      <span class="load${busy ? " busy" : ""}" aria-hidden="true">${[0, 1, 2, 3, 4].map(k => `<i class="${k < on ? "on" : ""}"></i>`).join("")}</span></button>`);
   }
+  out.push(`<div class="grid">${tiles.join("")}</div>`);
   const later = S.tasks.filter(x => x.day && x.day > addDays(t, 7) && !x.done).sort((a, b) => a.day.localeCompare(b.day) || byTime(a, b));
+  if (later.length) out.push(`<section class="tile flush"><div class="hd"><h2>Later</h2></div><div class="rows">${later.map(x => rowHTML(x, { showDay: true })).join("")}</div></section>`);
   const someday = S.tasks.filter(x => !x.day && !x.done).sort(byTime);
-  return `<section class="sec"><div class="sec-h"><h2>Next 7 days</h2><button class="link" data-act="openday" data-day="${t}">View today</button></div>${out.join("")}</section>`
-    + (later.length ? `<section class="sec"><div class="sec-h"><h2>Later</h2></div><div class="card list">${later.map(x => rowHTML(x, { showDay: true })).join("")}</div></section>` : "")
-    + `<section class="sec"><div class="sec-h"><h2>Someday</h2><button class="link" data-act="add" data-someday="1">Add</button></div>
-      <div class="card list">${someday.length ? someday.map(x => rowHTML(x)).join("") : `<div class="empty"><p>Things you want to do without a day yet. Claude can fit them into your week.</p></div>`}</div></section>`;
+  out.push(`<section class="tile flush"><div class="hd"><h2>Someday</h2><button class="link" data-act="add" data-someday="1">Add</button></div>
+    ${someday.length ? `<div class="rows">${someday.map(x => rowHTML(x)).join("")}</div>` : `<p class="empty">Things with no day yet. Claude can fit them into your week.</p>`}</section>`);
+  return out.join("");
 }
 
 function vClaude() {
@@ -527,34 +641,34 @@ function vClaude() {
         <div class="btns"><button class="btn primary" data-act="copyurl">Copy link</button><button class="btn" data-act="hideurl">Done</button></div>
         <p>This link is shown only once. Anyone who has it can change your schedule, so don't share it. You can make a new one any time; the old one stops working.</p></div>`
     : S.connector
-      ? `<div class="how"><strong>Connector is set up</strong><p>Chat with Claude in the Claude app and it can read and change this schedule. Changes it makes appear below, each with Undo.</p>
+      ? `<div class="how"><strong>Connected to Claude</strong><p>Chat with Claude in the Claude app and it can read and change this schedule. Its changes appear below, each with Undo.</p>
         <div class="btns"><button class="btn" data-act="makeconn">Make a new link</button><button class="btn danger${S.armed === "dropconn" ? " armed" : ""}" data-act="dropconn">${S.armed === "dropconn" ? "Tap again to turn off" : "Turn off"}</button></div></div>`
       : `<div class="how"><strong>Connect the Claude app</strong>
-        <ol><li>Tap <b>Create connector link</b> and copy it.</li><li>On claude.ai, open <b>Settings → Connectors → Add custom connector</b>, name it “Plan”, and paste the link.</li>
-        <li>In a chat, ask things like “I have a midterm Thursday at 9, plan my study time this week.”</li></ol>
+        <ol><li>Tap <b>Create connector link</b> and copy it.</li><li>On claude.ai, open <b>Settings, Connectors, Add custom connector</b>, name it “Plan”, and paste the link.</li>
+        <li>In a chat, try “I have a midterm Thursday at 9, plan my study time this week.”</li></ol>
         <div class="btns"><button class="btn primary" data-act="makeconn"${live || S.mode === "preview" ? "" : " disabled"}>Create connector link</button></div>
         <p>Needs the <code>plan-mcp</code> Edge Function deployed (see the README).</p></div>`;
   const chg = S.changes.length
-    ? S.changes.map(c => `<div class="chg${c.undone ? " undone" : ""}"><span class="name">${esc(c.summary || c.action)}</span><span class="sub">${ago(c.created_at)}${c.undone ? " · undone" : ""}</span>
-        <span class="act">${c.undone ? "" : `<button class="mini ghost" data-act="undo" data-id="${c.id}">Undo</button>`}</span></div>`).join("")
-    : `<div class="empty"><p>When Claude adds, moves or removes something, it shows up here.</p></div>`;
-  return `<section class="sec"><div class="card">${conn}</div></section>
-    <section class="sec"><div class="sec-h"><h2>Recent changes by Claude</h2></div><div class="card list">${chg}</div></section>`;
+    ? `<div class="rows">${S.changes.map(c => `<div class="chg${c.undone ? " undone" : ""}"><span class="name">${esc(c.summary || c.action)}</span><span class="sub">${ago(c.created_at)}${c.undone ? ", undone" : ""}</span>
+        <span class="act">${c.undone ? "" : `<button class="mini ghost" data-act="undo" data-id="${c.id}">Undo</button>`}</span></div>`).join("")}</div>`
+    : `<p class="empty">When Claude adds, moves or removes something, it shows up here.</p>`;
+  return `<section class="tile flush">${conn}</section>
+    <section class="tile flush"><div class="hd"><h2>Recent changes by Claude</h2></div>${chg}</section>`;
 }
 
 function vSettings() {
   const p = prof(), dev = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  return `<section class="sec"><div class="sec-h"><h2>Your day</h2></div><div class="card list form">
+  return `<section class="tile flush"><div class="hd"><h2>Your day</h2></div><div class="rows">
       <div class="frow"><label for="sStart">Day starts</label><input class="field" type="time" id="sStart" data-pf="day_start" value="${esc(p.day_start)}"></div>
       <div class="frow"><label for="sEnd">Day ends</label><input class="field" type="time" id="sEnd" data-pf="day_end" value="${esc(p.day_end)}"></div>
-      <div class="frow stack"><label for="sFocus">Best focus hours</label><input class="field" id="sFocus" data-pf="focus_hours" maxlength="200" placeholder="e.g. 9am–12pm" value="${esc(p.focus_hours)}"><small>Claude puts hard work here.</small></div>
-      <div class="frow stack"><label for="sNotes">Notes for Claude</label><textarea class="field" id="sNotes" data-pf="notes" maxlength="2000" placeholder="e.g. Classes Mon/Wed 10–11:15. Gym 3x a week. No work after 10pm.">${esc(p.notes)}</textarea><small>Anything Claude should know before it plans your days.</small></div>
-      <div class="frow"><span class="lbl">Time zone</span><span class="sub">${esc(p.timezone)}</span>${p.timezone !== dev ? `<small>This device is on ${esc(dev)}. <button class="link" data-act="usetz">Use ${esc(dev)}</button></small>` : ""}</div>
+      <div class="frow stack"><label for="sFocus">Best focus hours</label><input class="field" id="sFocus" data-pf="focus_hours" maxlength="200" placeholder="9am to 12pm" value="${esc(p.focus_hours)}"><small>Claude puts hard work here.</small></div>
+      <div class="frow stack"><label for="sNotes">Notes for Claude</label><textarea class="field" id="sNotes" data-pf="notes" maxlength="2000" placeholder="Classes Mon and Wed 10 to 11:15. Gym 3 times a week. No work after 10pm.">${esc(p.notes)}</textarea><small>Anything Claude should know before it plans your days.</small></div>
+      <div class="frow"><span class="lbl2">Time zone</span><span class="small">${esc(p.timezone)}</span>${p.timezone !== dev ? `<small>This device is on ${esc(dev)}. <button class="link" data-act="usetz">Use ${esc(dev)}</button></small>` : ""}</div>
     </div></section>
-    <section class="sec"><div class="sec-h"><h2>Account</h2></div><div class="card"><div class="how">
+    <section class="tile flush"><div class="hd"><h2>Account</h2></div><div class="how">
       <p>${S.mode === "live" ? "Signed in. Your schedule syncs between your phone and computer." : S.mode === "preview" ? "Preview mode: sample data, nothing is saved." : ""}</p>
       <div class="btns">${S.mode === "live" ? `<button class="btn" data-act="signout">Sign out</button>` : sb ? `<button class="btn primary" data-act="signin">Sign in</button>` : ""}</div>
-    </div></div></section>`;
+    </div></section>`;
 }
 
 /* ---------- add / edit sheet ---------- */
@@ -567,21 +681,20 @@ function drawSheet() {
   document.body.style.overflow = "hidden";
   root.innerHTML = `<div class="backdrop" data-act="closesheet"><form class="modal" id="taskForm" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
     <div class="grab"></div>
-    <div class="mhead"><h3 id="sheetTitle">${t.id ? "Edit" : "Add to schedule"}</h3><button type="button" class="link quiet" data-act="closesheet">Cancel</button></div>
-    <label class="fl"><span>What</span><input class="field" id="fTitle" maxlength="200" required placeholder="e.g. Study for midterm" value="${esc(t.title || "")}" autocomplete="off"></label>
-    <div class="fl"><span>Day</span><div class="chips">${dayChip(today, "Today")}${dayChip(tomorrow, "Tomorrow")}${dayChip("", "Someday")}</div>
-      ${t.day ? `<input class="field" type="date" id="fDay" value="${esc(t.day)}">` : ""}</div>
-    ${t.day ? `<div class="fl"><span>Time</span><div class="two"><input class="field" type="time" id="fTime" step="300" value="${esc(t.start_time || "")}">
-      <div class="chips"><button type="button" data-sf="anytime" aria-pressed="${!t.start_time}">Anytime</button></div></div></div>` : ""}
-    <div class="fl"><span>How long</span><div class="chips">${durs.map(d => `<button type="button" data-sf="dur" data-v="${d}" aria-pressed="${+t.duration_min === d}">${fmtDur(d)}</button>`).join("")}</div>
+    <div class="mhead"><h3 id="sheetTitle">${t.id ? "Edit" : "Add to your day"}</h3><button type="button" class="link quiet" data-act="closesheet">Cancel</button></div>
+    <label class="ftile"><span>What</span><input class="field" id="fTitle" maxlength="200" required placeholder="Study for midterm" value="${esc(t.title || "")}" autocomplete="off"></label>
+    <div class="ftile"><span>When</span><div class="chips">${dayChip(today, "Today")}${dayChip(tomorrow, "Tomorrow")}${dayChip("", "Someday")}</div>
+      ${t.day ? `<div class="two"><input class="field" type="date" id="fDay" value="${esc(t.day)}" aria-label="Day"><input class="field" type="time" id="fTime" step="300" value="${esc(t.start_time || "")}" aria-label="Start time"></div>
+      <div class="chips"><button type="button" data-sf="anytime" aria-pressed="${!t.start_time}">Anytime that day</button></div>` : ""}</div>
+    <div class="ftile"><span>How long</span><div class="chips">${durs.map(d => `<button type="button" data-sf="dur" data-v="${d}" aria-pressed="${+t.duration_min === d}">${fmtDur(d)}</button>`).join("")}</div>
       ${durs.includes(+t.duration_min) ? "" : `<input class="field" type="number" id="fDur" min="5" max="1440" step="5" value="${+t.duration_min || 30}" aria-label="Minutes">`}</div>
     <div class="two">
-      <div class="fl"><span>Type</span><div class="seg"><button type="button" data-sf="kind" data-v="flexible" aria-pressed="${t.kind !== "fixed"}">Flexible</button><button type="button" data-sf="kind" data-v="fixed" aria-pressed="${t.kind === "fixed"}">Fixed</button></div></div>
-      <div class="fl"><span>Priority</span><div class="seg">${[[1, "Low"], [2, "Med"], [3, "High"]].map(([v, l]) => `<button type="button" data-sf="priority" data-v="${v}" aria-pressed="${+t.priority === v}">${l}</button>`).join("")}</div></div>
+      <div class="ftile"><span>Type</span><div class="seg"><button type="button" data-sf="kind" data-v="flexible" aria-pressed="${t.kind !== "fixed"}">Flexible</button><button type="button" data-sf="kind" data-v="fixed" aria-pressed="${t.kind === "fixed"}">Fixed</button></div></div>
+      <div class="ftile"><span>Priority</span><div class="seg">${[[1, "Low"], [2, "Med"], [3, "High"]].map(([v, l]) => `<button type="button" data-sf="priority" data-v="${v}" aria-pressed="${+t.priority === v}">${l}</button>`).join("")}</div></div>
     </div>
     <p class="hint">${t.kind === "fixed" ? "Fixed: a class, shift or appointment. Claude won't move it unless you ask." : "Flexible: Claude can move this around when it plans your day."}</p>
-    <label class="fl"><span>Due (optional)</span><input class="field" type="date" id="fDue" value="${esc(t.due || "")}"></label>
-    <label class="fl"><span>Notes</span><textarea class="field" id="fNotes" maxlength="2000" placeholder="Optional">${esc(t.notes || "")}</textarea></label>
+    <label class="ftile"><span>Due (optional)</span><input class="field" type="date" id="fDue" value="${esc(t.due || "")}"></label>
+    <label class="ftile"><span>Notes</span><textarea class="field" id="fNotes" maxlength="2000" placeholder="Optional">${esc(t.notes || "")}</textarea></label>
     <div class="err" id="fErr"></div>
     <div class="btns"><button class="btn primary" type="submit" style="flex:1">${t.id ? "Save" : "Add"}</button>
       ${t.id ? `<button type="button" class="btn" data-act="sheetdone">${t.done ? "Not done" : "Done"}</button><button type="button" class="btn danger${S.armed === "del" ? " armed" : ""}" data-act="sheetdel">${S.armed === "del" ? "Delete?" : "Delete"}</button>` : ""}</div>
@@ -615,16 +728,21 @@ document.addEventListener("click", async e => {
   const a = el.dataset.act, id = el.dataset.id;
   if (a === "closesheet") { if (e.target === el || el.tagName === "BUTTON") closeSheet(); return; }
   if (a === "add") {
-    const day = el.dataset.someday ? null : el.dataset.day || (S.tab === "today" ? S.day : todayISO());
+    const day = el.dataset.someday ? null : el.dataset.day || (S.tab === "today" ? S.day : S.tab === "month" ? S.sel : todayISO());
     let start = null;
     if (!el.dataset.anytime && !el.dataset.someday && !el.dataset.day && day === todayISO()) start = fromMin(Math.ceil((nowMin() + 1) / 15) * 15);
     openSheet({ title: "", day, start_time: start, duration_min: 60, kind: "flexible", priority: 2, due: null, notes: "" });
   }
   else if (a === "edit") { const t = S.tasks.find(x => x.id === id); if (t) openSheet(t); }
-  else if (a === "toggle") { const t = S.tasks.find(x => x.id === id); if (t) save({ ...t, done: !t.done, done_at: null }); }
+  else if (a === "toggle") { const t = S.tasks.find(x => x.id === id); if (t) save({ ...t, done: !t.done, done_at: null }, t.done ? "" : "Done"); }
   else if (a === "totoday") { const t = S.tasks.find(x => x.id === id); if (t) save({ ...t, day: todayISO(), start_time: null }, "Moved to today"); }
-  else if (a === "shiftday") { S.day = addDays(S.day, +el.dataset.n); render(); }
-  else if (a === "gotoday") { S.day = todayISO(); render(); }
+  else if (a === "shiftday") {
+    if (S.tab === "month") { S.month = shiftMonth(S.month, +el.dataset.n); S.sel = S.month === todayISO().slice(0, 7) ? todayISO() : S.month + "-01"; }
+    else S.day = addDays(S.day, +el.dataset.n);
+    render();
+  }
+  else if (a === "gotoday") { if (S.tab === "month") { S.month = todayISO().slice(0, 7); S.sel = todayISO(); } else S.day = todayISO(); render(); }
+  else if (a === "selday") { S.sel = el.dataset.day; S.month = S.sel.slice(0, 7); render(); }
   else if (a === "openday") { S.day = el.dataset.day; S.tab = "today"; render(); window.scrollTo(0, 0); }
   else if (a === "sheetdone") { syncSheet(); const t = S.sheet; closeSheet(); save({ ...t, done: !t.done, done_at: null }, t.done ? "Marked not done" : "Done"); }
   else if (a === "sheetdel") {
@@ -686,7 +804,7 @@ async function saveProfile(p) {
 }
 function markSeen() { const top = Math.max(0, ...S.changes.map(c => c.id)); S.seenChangeId = top; lsSet("plan-seen-change", String(top)); }
 
-/* ---------- sign-in (same flow as Pocket) ---------- */
+/* ---------- sign-in (same account as Pocket) ---------- */
 function showAuth(step = "signin", email = "", msg = "", note = "") {
   const titles = { signin: "Sign in to Plan", signup: "Create your account", reset: "Reset your password", newpass: "Choose a new password" };
   document.getElementById("authRoot").innerHTML = `<div class="auth"><form class="auth-card" id="authForm" data-step="${step}">
@@ -746,8 +864,8 @@ async function startLive(user) {
 function startPreview() { api = previewApi(); S.mode = "preview"; render(); }
 
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && S.mode === "live") scheduleReload(); else if (document.visibilityState === "visible") render(); });
-// Keep the "now" line and hero current.
-setInterval(() => { if (!S.sheet && S.tab === "today" && document.visibilityState === "visible") { const d = todayISO(); if (S.lastToday && S.lastToday !== d && S.day === S.lastToday) S.day = d; S.lastToday = d; render(); } }, 60000);
+// Keep "now", "next" and the countdown current.
+setInterval(() => { if (!S.sheet && S.tab === "today" && document.visibilityState === "visible") { const d = todayISO(); if (S.lastToday && S.lastToday !== d && S.day === S.lastToday) S.day = d; S.lastToday = d; render(); } }, 30000);
 S.lastToday = todayISO();
 
 async function init() {
