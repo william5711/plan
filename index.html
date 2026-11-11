@@ -225,6 +225,13 @@ input[type="time"].field, input[type="date"].field { -webkit-appearance: none; a
 .fab:active { transform: scale(.94); }
 .fab svg { width: 24px; height: 24px; }
 
+/* Swipe transitions: new content slides in from the side the finger pushed toward */
+.in-from-right { animation: inR .3s cubic-bezier(.2,.8,.2,1); }
+.in-from-left { animation: inL .3s cubic-bezier(.2,.8,.2,1); }
+@keyframes inR { from { transform: translateX(40px); opacity: 0; } }
+@keyframes inL { from { transform: translateX(-40px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .in-from-right, .in-from-left { animation: none; } }
+
 /* Bottom sheet */
 .backdrop { position: fixed; inset: 0; z-index: 30; background: rgba(14, 12, 30, .5); display: grid; align-items: end; }
 .modal { background: var(--page); border-radius: 28px 28px 0 0; width: 100%; max-width: 560px; margin: 0 auto; max-height: 92%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
@@ -803,6 +810,70 @@ async function saveProfile(p) {
   try { await api.saveProfile(p); render(); toast("Saved"); } catch (err) { toast("Couldn't save: " + (err.message || "try again")); }
 }
 function markSeen() { const top = Math.max(0, ...S.changes.map(c => c.id)); S.seenChangeId = top; lsSet("plan-seen-change", String(top)); }
+
+/* ---------- swipe gestures (like Pocket) ----------
+   Middle of the screen: on Today, swipe to the next/previous day; on Month, to the next/previous month.
+   From the left or right edge: move between tabs (Today, Upcoming, Month, Claude).
+   The page follows the finger, then glides on or springs back. */
+const EDGE = 30, TAB_ORDER = ["today", "upcoming", "month", "claude"];
+const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+let sw = null;
+function dragView(dx, animate) {
+  const el = document.getElementById("view");
+  el.style.transition = animate && !reduceMotion() ? "transform .2s cubic-bezier(.2,.8,.2,1), opacity .2s" : "none";
+  el.style.transform = dx ? `translateX(${dx}px)` : "";
+  el.style.opacity = dx ? String(1 - Math.min(.5, Math.abs(dx) / innerWidth)) : "";
+}
+function slideIn(fromRight) {
+  render();
+  const el = document.getElementById("view");
+  el.classList.remove("in-from-right", "in-from-left"); void el.offsetWidth;
+  el.classList.add(fromRight ? "in-from-right" : "in-from-left");
+}
+function swipeTarget(s, dx) {
+  if (s.edge) {
+    const i = TAB_ORDER.indexOf(S.tab);
+    if (i < 0) return null;
+    if (s.edge === "left" && dx > 0 && i > 0) return { tab: TAB_ORDER[i - 1] };
+    if (s.edge === "right" && dx < 0 && i < TAB_ORDER.length - 1) return { tab: TAB_ORDER[i + 1] };
+    return null;
+  }
+  if (S.tab === "today" || S.tab === "month") return { step: dx < 0 ? 1 : -1 };
+  return null;
+}
+document.addEventListener("touchstart", e => {
+  sw = null;
+  if (S.sheet || e.touches.length !== 1 || S.mode === "loading") return;
+  if (e.target.closest(".tabbar, .auth, #sheetRoot, input, textarea, select")) return;
+  const t = e.touches[0];
+  sw = { x: t.clientX, y: t.clientY, at: Date.now(), lock: null, edge: t.clientX <= EDGE ? "left" : t.clientX >= innerWidth - EDGE ? "right" : null };
+}, { passive: true });
+document.addEventListener("touchmove", e => {
+  if (!sw) return;
+  const t = e.touches[0], dx = t.clientX - sw.x, dy = t.clientY - sw.y;
+  if (!sw.lock && Math.hypot(dx, dy) > 10) sw.lock = Math.abs(dx) > Math.abs(dy) * 1.3 ? "x" : "y";
+  if (sw.lock !== "x" || !swipeTarget(sw, dx)) return;
+  e.preventDefault();
+  dragView(sw.edge ? dx : dx * 0.85);
+}, { passive: false });
+document.addEventListener("touchend", e => {
+  if (!sw) return;
+  const s = sw; sw = null;
+  if (s.lock !== "x") return;
+  const dx = e.changedTouches[0].clientX - s.x, ms = Date.now() - s.at, go = swipeTarget(s, dx);
+  if (!go) return dragView(0, true);
+  const far = Math.abs(dx) > innerWidth * 0.25 || (Math.abs(dx) > 50 && ms < 300);
+  if (!far) return dragView(0, true);
+  dragView(dx < 0 ? -innerWidth : innerWidth, true);
+  setTimeout(() => {
+    dragView(0);
+    if (go.tab) { S.tab = go.tab; S.armed = null; if (S.tab === "claude") markSeen(); window.scrollTo(0, 0); }
+    else if (S.tab === "today") S.day = addDays(S.day, go.step);
+    else { S.month = shiftMonth(S.month, go.step); S.sel = S.month === todayISO().slice(0, 7) ? todayISO() : S.month + "-01"; }
+    slideIn(dx < 0);
+  }, reduceMotion() ? 0 : 170);
+}, { passive: true });
+document.addEventListener("touchcancel", () => { if (sw?.lock === "x") dragView(0, true); sw = null; }, { passive: true });
 
 /* ---------- sign-in (same account as Pocket) ---------- */
 function showAuth(step = "signin", email = "", msg = "", note = "") {
