@@ -225,6 +225,54 @@ input[type="time"].field, input[type="date"].field { -webkit-appearance: none; a
 .fab:active { transform: scale(.94); }
 .fab svg { width: 24px; height: 24px; }
 
+/* Two-column groups: one column on phones, side by side on a Mac (see the wide-screen block below) */
+.today-grid, .month-grid, .col-main { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); align-items: start; min-width: 0; }
+.side { display: none; }
+kbd { font: 600 11px/1 var(--font); color: var(--ink-3); background: var(--tile-2); border-radius: 6px; padding: 3px 6px; }
+
+/* Wide screens (Mac, iPad landscape): sidebar instead of the tab bar; Today's tiles beside the timeline */
+@media (min-width: 900px) {
+  body { padding-left: 232px; }
+  .side { display: flex; flex-direction: column; gap: 6px; position: fixed; top: 0; bottom: 0; left: 0; width: 232px; padding: 18px 14px 16px; background: var(--tile); border-right: 1px solid var(--line); z-index: 15; }
+  .brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; letter-spacing: -.02em; padding: 0 6px 10px; }
+  .brand img { border-radius: 8px; }
+  .sadd { display: flex; justify-content: space-between; align-items: center; border: 0; border-radius: 14px; background: var(--red); color: var(--on-red); font-weight: 700; font-size: 15px; padding: 11px 14px; margin-bottom: 10px; }
+  .sadd kbd { background: rgba(255, 255, 255, .22); color: var(--on-red); }
+  .snavs { display: grid; gap: 2px; }
+  .snav { display: flex; align-items: center; gap: 10px; border: 0; background: none; border-radius: 12px; padding: 9px 10px; font-size: 14.5px; font-weight: 600; color: var(--ink-2); text-align: left; width: 100%; position: relative; }
+  .snav svg { width: 20px; height: 20px; flex: none; }
+  .snav span:not(.sbadge) { flex: 1; }
+  .snav[aria-current="page"] { background: var(--page); color: var(--ink); }
+  .snav[aria-current="page"] svg { color: var(--red); }
+  .sbadge { min-width: 18px; height: 18px; border-radius: 9px; background: var(--red); color: var(--on-red); font-size: 10.5px; font-weight: 800; display: grid; place-items: center; padding: 0 5px; }
+  .sfoot { margin-top: auto; display: grid; gap: 8px; }
+  .keys { margin: 0; padding: 0 10px; font-size: 11.5px; color: var(--ink-3); line-height: 1.5; }
+  .tabbar, #setBtn { display: none !important; }
+  .wrap { max-width: 1180px; padding-left: 28px; padding-right: 28px; }
+  .top .wrap { padding-top: 18px; }
+  .sheet .wrap { padding-bottom: 40px; gap: 14px; }
+  .today-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+  .col-main { gap: 14px; }
+  .grid { gap: 14px; }
+  .today-grid .col-side { position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow-y: auto; border-radius: var(--r-tile); }
+  .col-side .hd { position: sticky; top: 0; z-index: 5; background: var(--tile); padding-top: 12px; padding-bottom: 8px; }
+  .month-grid { grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr); gap: 14px; }
+  .month-grid > .tmr { position: sticky; top: 14px; }
+  .cell { min-height: 108px; padding: 6px 4px; }
+  .cell .ev { font-size: 11px; padding: 2px 5px; }
+  .grid.days { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #view[data-tab="claude"], #view[data-tab="settings"] { max-width: 780px; }
+  .backdrop { align-items: center; }
+  .modal { border-radius: 26px; max-height: 88vh; max-width: 540px; animation: pop .22s cubic-bezier(.2,.8,.2,1); }
+  @keyframes pop { from { transform: scale(.97); opacity: 0; } }
+  .toast { bottom: 28px; left: calc(50% + 116px); }
+}
+@media (hover: hover) {
+  .snav:hover, .tile.tap:hover, .row .main:hover .name, .cell:hover { filter: brightness(.97); }
+  .snav:hover { background: var(--page); }
+  .blk:hover { filter: brightness(.96); }
+}
+
 /* Swipe transitions: new content slides in from the side the finger pushed toward */
 .in-from-right { animation: inR .3s cubic-bezier(.2,.8,.2,1); }
 .in-from-left { animation: inL .3s cubic-bezier(.2,.8,.2,1); }
@@ -269,6 +317,21 @@ input[type="time"].field, input[type="date"].field { -webkit-appearance: none; a
 </style>
 </head>
 <body>
+<aside class="side" aria-label="Sections">
+  <div class="brand"><img src="icons/icon-192.png" width="30" height="30" alt=""><span>Plan</span></div>
+  <button class="sadd" data-act="add"><span>+ Add</span><kbd>N</kbd></button>
+  <nav class="snavs">
+    <button class="snav" data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="7" height="9" rx="2"/><rect x="13" y="4" width="7" height="5" rx="2"/><rect x="13" y="11" width="7" height="9" rx="2"/><rect x="4" y="15" width="7" height="5" rx="2"/></svg><span>Today</span><kbd>1</kbd></button>
+    <button class="snav" data-tab="upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h3M10 6h10M4 12h3M10 12h10M4 18h3M10 18h10"/></svg><span>Upcoming</span><kbd>2</kbd></button>
+    <button class="snav" data-tab="month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Month</span><kbd>3</kbd></button>
+    <button class="snav" data-tab="claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4.5 5.5h15v10h-8l-4.5 3.5v-3.5h-2.5z"/><path d="M8.5 10.5h7"/></svg><span>Claude</span><span class="sbadge" id="sideBadge" hidden></span><kbd>4</kbd></button>
+  </nav>
+  <div class="sfoot">
+    <button class="snav" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span>Settings</span></button>
+    <p class="keys">T today, ← → change day, N new task</p>
+  </div>
+</aside>
+
 <header class="top"><div class="wrap">
   <div class="topbar">
     <div class="ttl"><h1 id="pageTitle">Today</h1><p id="pageSub"></p></div>
@@ -459,7 +522,7 @@ function previewApi() {
 /* ---------- views ---------- */
 function render() {
   const onDay = S.tab === "today", onMonth = S.tab === "month", isToday = S.day === todayISO(), thisMonth = S.month === todayISO().slice(0, 7);
-  document.querySelectorAll(".tab").forEach(b => b.dataset.tab === S.tab ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
+  document.querySelectorAll(".tab, .snav").forEach(b => b.dataset.tab === S.tab ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
   const mDate = parseISO(S.month + "-01"), mCount = S.tasks.filter(t => t.day && t.day.startsWith(S.month)).length;
   document.getElementById("pageTitle").textContent = onDay ? (isToday ? "Today" : relDay(S.day) === "Tomorrow" || relDay(S.day) === "Yesterday" ? relDay(S.day) : dayLabel(S.day, { weekday: "long" }))
     : onMonth ? mDate.toLocaleDateString("en-US", { month: "long" })
@@ -477,8 +540,21 @@ function render() {
   pill.hidden = !pill.textContent || !tb.hidden;
   const fresh = S.changes.filter(c => c.id > S.seenChangeId && !c.undone).length, badge = document.getElementById("chgBadge");
   badge.hidden = !fresh || S.tab === "claude"; badge.textContent = fresh;
-  document.getElementById("view").innerHTML = S.mode === "loading" ? `<div class="tile"><p class="notice">Loading your schedule…</p></div>`
+  const sb = document.getElementById("sideBadge"); sb.hidden = badge.hidden; sb.textContent = fresh;
+  const view = document.getElementById("view"), oldSide = view.querySelector(".col-side"), keepScroll = oldSide && view.dataset.day === S.day && view.dataset.tab === S.tab ? oldSide.scrollTop : null;
+  view.dataset.tab = S.tab; view.dataset.day = S.day;
+  view.innerHTML = S.mode === "loading" ? `<div class="tile"><p class="notice">Loading your schedule…</p></div>`
     : ({ today: vToday, upcoming: vUpcoming, month: vMonth, claude: vClaude, settings: vSettings })[S.tab]();
+  // On a Mac the timeline scrolls in its own column: keep its place across redraws, and open a new day near the current time.
+  const side = view.querySelector(".col-side");
+  if (side && side.scrollHeight > side.clientHeight) {
+    if (keepScroll != null) side.scrollTop = keepScroll;
+    else {
+      const line = side.querySelector(".nowline"), first = side.querySelector(".blk");
+      const target = line || first;
+      if (target) side.scrollTop = Math.max(0, target.getBoundingClientRect().top - side.getBoundingClientRect().top - side.clientHeight / 3);
+    }
+  }
 }
 
 // Month: a calendar grid (weeks start Sunday) with each day's tasks as small bars, and the picked day's list below.
@@ -495,14 +571,14 @@ function vMonth() {
       <span class="dn">${parseISO(d).getDate()}</span>${evs}${more > 0 ? `<span class="more">+${more}</span>` : ""}</button>`;
   }
   const sel = tasksOn(S.sel).sort(byTime);
-  return `<section class="tile cal" aria-label="${esc(first.toLocaleDateString("en-US", { month: "long", year: "numeric" }))}">
+  return `<div class="month-grid"><section class="tile cal" aria-label="${esc(first.toLocaleDateString("en-US", { month: "long", year: "numeric" }))}">
       <div class="cal-h" aria-hidden="true">${["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(w => `<span>${w}</span>`).join("")}</div>
       <div class="cal-g">${cells}</div>
       <div class="cal-key"><span><i class="k"></i>Flexible</span><span><i class="k fixed"></i>Fixed</span><span><i class="k hi"></i>High priority</span></div>
     </section>
     <section class="tile flush tmr"><div class="hd"><strong>${esc(relDay(S.sel) === "Today" || relDay(S.sel) === "Tomorrow" ? relDay(S.sel) : dayLabel(S.sel, { weekday: "long" }))}</strong><span>${esc(dayLabel(S.sel, { month: "long", day: "numeric" }))}</span></div>
       ${sel.length ? `<div class="rows">${sel.map(x => rowHTML(x, { action: `<span class="when">${x.start_time ? fmtShort(x.start_time) : "anytime"}</span>` })).join("")}</div>` : `<p class="empty">Nothing planned.</p>`}
-      <div class="hd" style="padding-bottom:8px"><button class="link" data-act="add" data-day="${S.sel}">Add to this day</button><button class="link" data-act="openday" data-day="${S.sel}">See timeline</button></div></section>`;
+      <div class="hd" style="padding-bottom:8px"><button class="link" data-act="add" data-day="${S.sel}">Add to this day</button><button class="link" data-act="openday" data-day="${S.sel}">See timeline</button></div></section></div>`;
 }
 
 function checkBtn(t) {
@@ -582,10 +658,11 @@ function vToday() {
     if (anytime.length) out.push(`<section class="tile flush"><div class="hd"><h2>Anytime</h2></div><div class="rows">${anytime.map(t => rowHTML(t)).join("")}</div></section>`);
   }
 
-  // The whole day on a timeline
-  out.push(`<section class="tile flush"><div class="hd"><h2>Whole day</h2><span class="small">${timed.length ? "Tap a gap to add" : ""}</span></div>
-    ${timeline(timed, isToday)}${!isToday && !anytime.length ? `<p class="empty"><button class="link" data-act="add" data-anytime="1">Add an anytime task</button></p>` : ""}</section>`);
-  return out.join("");
+  // The whole day on a timeline: below the tiles on a phone, beside them on a Mac.
+  const verb = matchMedia("(hover: hover)").matches ? "Click" : "Tap";
+  const side = `<section class="tile flush"><div class="hd"><h2>Whole day</h2><span class="small">${timed.length ? verb + " a gap to add" : ""}</span></div>
+    ${timeline(timed, isToday)}${!isToday && !anytime.length ? `<p class="empty"><button class="link" data-act="add" data-anytime="1">Add an anytime task</button></p>` : ""}</section>`;
+  return `<div class="today-grid"><div class="col-main">${out.join("")}</div><div class="col-side">${side}</div></div>`;
 }
 function isoToday() { return todayISO(); }
 
@@ -632,7 +709,7 @@ function vUpcoming() {
       <span class="small">${list.length ? `${list.length} ${list.length === 1 ? "thing" : "things"}, ${fmtDur(mins)}` : "Nothing yet"}</span>
       <span class="load${busy ? " busy" : ""}" aria-hidden="true">${[0, 1, 2, 3, 4].map(k => `<i class="${k < on ? "on" : ""}"></i>`).join("")}</span></button>`);
   }
-  out.push(`<div class="grid">${tiles.join("")}</div>`);
+  out.push(`<div class="grid days">${tiles.join("")}</div>`);
   const later = S.tasks.filter(x => x.day && x.day > addDays(t, 7) && !x.done).sort((a, b) => a.day.localeCompare(b.day) || byTime(a, b));
   if (later.length) out.push(`<section class="tile flush"><div class="hd"><h2>Later</h2></div><div class="rows">${later.map(x => rowHTML(x, { showDay: true })).join("")}</div></section>`);
   const someday = S.tasks.filter(x => !x.day && !x.done).sort(byTime);
@@ -801,6 +878,28 @@ document.addEventListener("change", e => {
   saveProfile(p);
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && S.sheet) closeSheet(); });
+// Keyboard shortcuts (mainly for the Mac): N new task, T today, arrows change day or month, 1-4 switch tabs.
+document.addEventListener("keydown", e => {
+  if (S.sheet || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
+  if (e.target.closest?.("input, textarea, select, [contenteditable]") || document.querySelector(".auth")) return;
+  const k = e.key, tabs = { 1: "today", 2: "upcoming", 3: "month", 4: "claude" };
+  if (k === "n" || k === "N") {
+    e.preventDefault();
+    const day = S.tab === "today" ? S.day : S.tab === "month" ? S.sel : todayISO();
+    openSheet({ title: "", day, start_time: day === todayISO() ? fromMin(Math.ceil((nowMin() + 1) / 15) * 15) : null, duration_min: 60, kind: "flexible", priority: 2, due: null, notes: "" });
+  } else if (k === "t" || k === "T") {
+    if (S.tab === "month") { S.month = todayISO().slice(0, 7); S.sel = todayISO(); } else { S.tab = "today"; S.day = todayISO(); }
+    render();
+  } else if ((k === "ArrowLeft" || k === "ArrowRight") && (S.tab === "today" || S.tab === "month")) {
+    e.preventDefault();
+    const n = k === "ArrowRight" ? 1 : -1;
+    if (S.tab === "today") S.day = addDays(S.day, n);
+    else { S.month = shiftMonth(S.month, n); S.sel = S.month === todayISO().slice(0, 7) ? todayISO() : S.month + "-01"; }
+    slideIn(n > 0);
+  } else if (tabs[k]) {
+    S.tab = tabs[k]; S.armed = null; if (S.tab === "claude") markSeen(); render(); window.scrollTo(0, 0);
+  }
+});
 
 async function save(t, msg) {
   try { await api.saveTask(t); render(); if (msg) toast(msg); }
