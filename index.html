@@ -263,7 +263,8 @@ kbd { font: 600 11px/1 var(--font); color: var(--ink-3); background: var(--tile-
   .grid.days { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   #view[data-tab="claude"], #view[data-tab="settings"] { max-width: 780px; }
   .backdrop { align-items: center; }
-  .modal { border-radius: 26px; max-height: 88vh; max-width: 540px; animation: pop .22s cubic-bezier(.2,.8,.2,1); }
+  .modal { border-radius: 26px; max-height: 88vh; max-width: 540px; }
+  .modal.enter { animation: pop .22s cubic-bezier(.2,.8,.2,1); }
   @keyframes pop { from { transform: scale(.97); opacity: 0; } }
   .toast { bottom: 28px; left: calc(50% + 116px); }
 }
@@ -284,9 +285,13 @@ kbd { font: 600 11px/1 var(--font); color: var(--ink-3); background: var(--tile-
 .backdrop { position: fixed; inset: 0; z-index: 30; background: rgba(14, 12, 30, .5); display: grid; align-items: end; }
 .modal { background: var(--page); border-radius: 28px 28px 0 0; width: 100%; max-width: 560px; margin: 0 auto; max-height: 92%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
   padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
-  display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); animation: up .38s cubic-bezier(.32,.72,0,1); }
+  display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+.modal.enter { animation: up .38s cubic-bezier(.32,.72,0,1); }
+.durrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.durrow .field { width: 84px; text-align: center; }
+.durrow label { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--ink-2); font-weight: 600; }
 @keyframes up { from { transform: translateY(100%); } }
-@media (prefers-reduced-motion: reduce) { .modal { animation: none; } .fab { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .modal.enter { animation: none; } .fab { transition: none; } }
 .grab { width: 40px; height: 5px; border-radius: 9px; background: var(--ink-3); opacity: .5; justify-self: center; }
 .mhead { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 0 2px; }
 .modal h3 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
@@ -763,15 +768,18 @@ function drawSheet() {
   const durs = [15, 30, 45, 60, 90, 120, 180];
   const dayChip = (v, l) => `<button type="button" data-sf="day" data-v="${v}" aria-pressed="${(t.day || "") === v}">${l}</button>`;
   document.body.style.overflow = "hidden";
-  root.innerHTML = `<div class="backdrop" data-act="closesheet"><form class="modal" id="taskForm" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  // Only the first draw animates in; later redraws (after tapping a chip) swap in place and keep the scroll position.
+  const first = !t._opened, keepScroll = document.getElementById("taskForm")?.scrollTop || 0; t._opened = true;
+  const dur = Math.max(5, Math.min(1440, +t.duration_min || 30)), custom = t._custom || !durs.includes(dur);
+  root.innerHTML = `<div class="backdrop" data-act="closesheet"><form class="modal${first ? " enter" : ""}" id="taskForm" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
     <div class="grab"></div>
     <div class="mhead"><h3 id="sheetTitle">${t.id ? "Edit" : "Add to your day"}</h3><button type="button" class="link quiet" data-act="closesheet">Cancel</button></div>
     <label class="ftile"><span>What</span><input class="field" id="fTitle" maxlength="200" required placeholder="Study for midterm" value="${esc(t.title || "")}" autocomplete="off"></label>
     <div class="ftile"><span>When</span><div class="chips">${dayChip(today, "Today")}${dayChip(tomorrow, "Tomorrow")}${dayChip("", "Someday")}</div>
       ${t.day ? `<div class="two"><input class="field" type="date" id="fDay" value="${esc(t.day)}" aria-label="Day"><input class="field" type="time" id="fTime" step="300" value="${esc(t.start_time || "")}" aria-label="Start time"></div>
       <div class="chips"><button type="button" data-sf="anytime" aria-pressed="${!t.start_time}">Anytime that day</button></div>` : ""}</div>
-    <div class="ftile"><span>How long</span><div class="chips">${durs.map(d => `<button type="button" data-sf="dur" data-v="${d}" aria-pressed="${+t.duration_min === d}">${fmtDur(d)}</button>`).join("")}</div>
-      ${durs.includes(+t.duration_min) ? "" : `<input class="field" type="number" id="fDur" min="5" max="1440" step="5" value="${+t.duration_min || 30}" aria-label="Minutes">`}</div>
+    <div class="ftile"><span>How long</span><div class="chips">${durs.map(d => `<button type="button" data-sf="dur" data-v="${d}" aria-pressed="${!custom && dur === d}">${fmtDur(d)}</button>`).join("")}<button type="button" data-sf="durcustom" aria-pressed="${custom}">Custom</button></div>
+      ${custom ? `<div class="durrow"><label><input class="field" type="number" id="fDurH" inputmode="numeric" min="0" max="24" step="1" value="${Math.floor(dur / 60)}" aria-label="Hours"> h</label><label><input class="field" type="number" id="fDurM" inputmode="numeric" min="0" max="59" step="1" value="${dur % 60}" aria-label="Minutes"> min</label><span class="hint">Any length from 5 minutes to 24 hours.</span></div>` : ""}</div>
     <div class="two">
       <div class="ftile"><span>Type</span><div class="seg"><button type="button" data-sf="kind" data-v="flexible" aria-pressed="${t.kind !== "fixed"}">Flexible</button><button type="button" data-sf="kind" data-v="fixed" aria-pressed="${t.kind === "fixed"}">Fixed</button></div></div>
       <div class="ftile"><span>Priority</span><div class="seg">${[[1, "Low"], [2, "Med"], [3, "High"]].map(([v, l]) => `<button type="button" data-sf="priority" data-v="${v}" aria-pressed="${+t.priority === v}">${l}</button>`).join("")}</div></div>
@@ -783,7 +791,9 @@ function drawSheet() {
     <div class="btns"><button class="btn primary" type="submit" style="flex:1">${t.id ? "Save" : "Add"}</button>
       ${t.id ? `<button type="button" class="btn" data-act="sheetdone">${t.done ? "Not done" : "Done"}</button><button type="button" class="btn danger${S.armed === "del" ? " armed" : ""}" data-act="sheetdel">${S.armed === "del" ? "Delete?" : "Delete"}</button>` : ""}</div>
   </form></div>`;
-  if (!t.id && !t._focused) { t._focused = true; setTimeout(() => document.getElementById("fTitle")?.focus(), 60); }
+  if (!first) document.getElementById("taskForm").scrollTop = keepScroll;
+  if (t._focusDur) { t._focusDur = false; const m = document.getElementById("fDurM"); m?.focus(); m?.select(); }
+  else if (!t.id && !t._focused) { t._focused = true; setTimeout(() => document.getElementById("fTitle")?.focus(), 60); }
 }
 // Read typed values back into the draft before redrawing (so taps on chips don't lose text).
 function syncSheet() {
@@ -792,7 +802,7 @@ function syncSheet() {
   if (v("fTitle")) t.title = v("fTitle").value;
   if (v("fDay") && v("fDay").value) t.day = v("fDay").value;
   if (v("fTime")) t.start_time = v("fTime").value || null;
-  if (v("fDur")) t.duration_min = Math.max(5, Math.min(1440, +v("fDur").value || 30));
+  if (v("fDurH") && v("fDurM")) t.duration_min = Math.max(5, Math.min(1440, Math.round((+v("fDurH").value || 0) * 60 + (+v("fDurM").value || 0))));
   if (v("fDue")) t.due = v("fDue").value || null;
   if (v("fNotes")) t.notes = v("fNotes").value;
 }
@@ -805,7 +815,8 @@ document.addEventListener("click", async e => {
   if (el.dataset.sf) { syncSheet(); const t = S.sheet, f = el.dataset.sf, v = el.dataset.v;
     if (f === "day") { t.day = v || null; if (!v) t.start_time = null; }
     else if (f === "anytime") t.start_time = null;
-    else if (f === "dur") t.duration_min = +v;
+    else if (f === "dur") { t.duration_min = +v; t._custom = false; }
+    else if (f === "durcustom") { t._custom = true; t._focusDur = true; }
     else if (f === "kind") t.kind = v;
     else if (f === "priority") t.priority = +v;
     drawSheet(); return; }
