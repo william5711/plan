@@ -665,13 +665,15 @@ function vToday() {
     out.push(`<section class="tile now"><span class="lbl" style="color:var(--ink-2)">${esc(dayLabel(S.day, { weekday: "long", month: "long", day: "numeric" }))}</span>
       <div class="title">${list.length ? list.length + (list.length === 1 ? " thing" : " things") + " planned" : "Nothing planned yet"}</div>
       <div class="foot"><div class="count">${fmtDur(plannedMinutes(list))}<small>planned</small></div></div></section>`);
-    if (anytime.length) out.push(`<section class="tile flush"><div class="hd"><h2>Anytime</h2></div><div class="rows">${anytime.map(t => rowHTML(t)).join("")}</div></section>`);
+    // Every task on that day with a check box: scheduled ones by time, then anytime ones.
+    out.push(`<section class="tile flush"><div class="hd"><h2>Planned</h2><button class="link" data-act="add" data-day="${S.day}">Add</button></div>
+      ${list.length ? `<div class="rows">${timed.map(t => rowHTML(t)).join("")}${anytime.map(t => rowHTML(t, { action: `<span class="when small">anytime</span>` })).join("")}</div>` : `<p class="empty">Nothing planned yet.</p>`}</section>`);
   }
 
   // The whole day on a timeline: below the tiles on a phone, beside them on a Mac.
   const verb = matchMedia("(hover: hover)").matches ? "Click" : "Tap";
   const side = `<section class="tile flush"><div class="hd"><h2>Whole day</h2><span class="small">${timed.length ? verb + " a gap to add" : ""}</span></div>
-    ${timeline(timed, isToday)}${!isToday && !anytime.length ? `<p class="empty"><button class="link" data-act="add" data-anytime="1">Add an anytime task</button></p>` : ""}</section>`;
+    ${timeline(timed, isToday)}</section>`;
   return `<div class="today-grid"><div class="col-main">${out.join("")}</div><div class="col-side">${side}</div></div>`;
 }
 function isoToday() { return todayISO(); }
