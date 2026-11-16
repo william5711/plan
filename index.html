@@ -385,6 +385,7 @@ function parseISO(s) { const [y, m, d] = s.split("-").map(Number); return new Da
 function addDays(s, n) { const d = parseISO(s); d.setDate(d.getDate() + n); return iso(d); }
 function dayLabel(s, opts = { weekday: "long", month: "short", day: "numeric" }) { return parseISO(s).toLocaleDateString("en-US", opts); }
 function relDay(s) { const t = todayISO(); return s === t ? "Today" : s === addDays(t, 1) ? "Tomorrow" : s === addDays(t, -1) ? "Yesterday" : dayLabel(s, { weekday: "short", month: "short", day: "numeric" }); }
+function wasWords(t) { const d = t.day === todayISO() ? "today" : t.day === addDays(todayISO(), -1) ? "yesterday" : dayLabel(t.day, { weekday: "short", month: "short", day: "numeric" }); return "was " + d + (t.start_time ? " " + fmtTime(t.start_time) : ""); }
 function dueWords(s) { const r = relDay(s); return r === "Today" || r === "Tomorrow" || r === "Yesterday" ? r.toLowerCase() : dayLabel(s, { weekday: "long" }) + (s > addDays(todayISO(), 6) ? ", " + dayLabel(s, { month: "short", day: "numeric" }) : ""); }
 function hm(t) { return t ? String(t).slice(0, 5) : null; }
 function toMin(t) { const [h, m] = hm(t).split(":").map(Number); return h * 60 + m; }
@@ -594,6 +595,7 @@ function rowHTML(t, opts = {}) {
   if (t.kind === "fixed") tags.push(`<span class="tag">Fixed</span>`);
   if (t.priority === 3) tags.push(`<span class="tag hi">High</span>`);
   if (t.source === "claude") tags.push(`<span class="tag ai">Claude</span>`);
+  if (opts.was) tags.push(`<span>${esc(opts.was)}</span>`);
   if (t.due && !opts.noDue) tags.push(`<span>due ${esc(dueWords(t.due))}</span>`);
   const when = t.start_time ? fmtShort(t.start_time) : opts.showDay && t.day ? esc(relDay(t.day)) : "";
   return `<div class="row${t.done ? " done" : ""}">${checkBtn(t)}
@@ -646,15 +648,17 @@ function vToday() {
         : `<button class="tile tap" data-act="openday" data-day="${addDays(S.day, 1)}"><span class="lbl">Tomorrow</span><span class="stat">${tomorrow.length}<small> ${tomorrow.length === 1 ? "thing" : "things"}</small></span><span class="small">${tomorrow.filter(t => t.start_time).sort(byTime)[0] ? "First at " + fmtTime(tomorrow.filter(t => t.start_time).sort(byTime)[0].start_time) : "Nothing timed yet"}</span></button>`}
     </div>`);
 
-    // Later today: everything after next, plus anytime tasks
-    const later = upcoming.slice(1), openAny = anytime.filter(t => !t.done);
+    // Later today: every timed item still to come (the next one too, so each has a check box), anything else in progress, and anytime tasks
+    const running = timed.filter(t => !t.done && t !== cur && toMin(t.start_time) <= n && n < toMin(t.start_time) + t.duration_min);
+    const later = [...running, ...upcoming], openAny = anytime.filter(t => !t.done);
     out.push(`<section class="tile flush"><div class="hd"><h2>Later today</h2><button class="link" data-act="add" data-anytime="1">Add</button></div>
       ${later.length || openAny.length ? `<div class="rows">${later.map(t => rowHTML(t)).join("")}${openAny.map(t => rowHTML(t, { action: `<span class="when small">anytime</span>` })).join("")}</div>`
-        : `<p class="empty">Nothing else after ${next ? esc(next.title) : "this"}.</p>`}</section>`);
+        : `<p class="empty">Nothing else planned for the rest of today.</p>`}</section>`);
 
-    // Left over from earlier days
-    const overdue = S.tasks.filter(t => t.day && t.day < S.day && !t.done).sort((a, b) => a.day.localeCompare(b.day) || byTime(a, b));
-    if (overdue.length) out.push(`<section class="tile flush"><div class="hd"><h2>Left over from before</h2></div><div class="rows">${overdue.map(t => rowHTML(t, { action: `<button class="mini ghost" data-act="totoday" data-id="${t.id}">Move to today</button>` })).join("")}</div></section>`);
+    // Overdue: to-dos whose time or day has passed without a check. Fixed events (exams, classes, flights) just stay on their own day.
+    const missed = timed.filter(t => !t.done && t.kind !== "fixed" && toMin(t.start_time) + t.duration_min <= n);
+    const before = S.tasks.filter(t => t.day && t.day < S.day && !t.done && t.kind !== "fixed").sort((a, b) => a.day.localeCompare(b.day) || byTime(a, b));
+    if (before.length || missed.length) out.push(`<section class="tile flush"><div class="hd"><h2>Overdue</h2></div><div class="rows">${before.map(t => rowHTML(t, { was: wasWords(t), action: `<button class="mini ghost" data-act="totoday" data-id="${t.id}">Move to today</button>` })).join("")}${missed.map(t => rowHTML(t)).join("")}</div></section>`);
   } else {
     // Another day: a summary tile, then its anytime list.
     out.push(`<section class="tile now"><span class="lbl" style="color:var(--ink-2)">${esc(dayLabel(S.day, { weekday: "long", month: "long", day: "numeric" }))}</span>
