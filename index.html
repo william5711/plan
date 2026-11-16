@@ -115,6 +115,7 @@ button { cursor: pointer; }
 .row .name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .row .sub { font-size: 12.5px; color: var(--ink-2); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .row.done .name { text-decoration: line-through; color: var(--ink-3); }
+.row .when.now { color: var(--red); }
 .row .when { font-size: 14px; font-weight: 700; text-align: right; white-space: nowrap; }
 .check { width: 34px; height: 34px; border: 0; background: none; display: grid; place-items: center; padding: 0; color: var(--ink-3); }
 .check i { width: 22px; height: 22px; border-radius: 8px; box-shadow: inset 0 0 0 2px currentColor; display: grid; place-items: center; }
@@ -648,11 +649,11 @@ function vToday() {
         : `<button class="tile tap" data-act="openday" data-day="${addDays(S.day, 1)}"><span class="lbl">Tomorrow</span><span class="stat">${tomorrow.length}<small> ${tomorrow.length === 1 ? "thing" : "things"}</small></span><span class="small">${tomorrow.filter(t => t.start_time).sort(byTime)[0] ? "First at " + fmtTime(tomorrow.filter(t => t.start_time).sort(byTime)[0].start_time) : "Nothing timed yet"}</span></button>`}
     </div>`);
 
-    // Later today: every timed item still to come (the next one too, so each has a check box), anything else in progress, and anytime tasks
-    const running = timed.filter(t => !t.done && t !== cur && toMin(t.start_time) <= n && n < toMin(t.start_time) + t.duration_min);
+    // Later today: whatever is happening now (marked "now"), every timed item still to come (the next one too), and anytime tasks, each with a check box
+    const running = timed.filter(t => !t.done && toMin(t.start_time) <= n && n < toMin(t.start_time) + t.duration_min);
     const later = [...running, ...upcoming], openAny = anytime.filter(t => !t.done);
     out.push(`<section class="tile flush"><div class="hd"><h2>Later today</h2><button class="link" data-act="add" data-anytime="1">Add</button></div>
-      ${later.length || openAny.length ? `<div class="rows">${later.map(t => rowHTML(t)).join("")}${openAny.map(t => rowHTML(t, { action: `<span class="when small">anytime</span>` })).join("")}</div>`
+      ${later.length || openAny.length ? `<div class="rows">${later.map(t => running.includes(t) ? rowHTML(t, { action: `<span class="when now">now</span>` }) : rowHTML(t)).join("")}${openAny.map(t => rowHTML(t, { action: `<span class="when small">anytime</span>` })).join("")}</div>`
         : `<p class="empty">Nothing else planned for the rest of today.</p>`}</section>`);
 
     // Overdue: to-dos whose time or day has passed without a check. Fixed events (exams, classes, flights) just stay on their own day.
